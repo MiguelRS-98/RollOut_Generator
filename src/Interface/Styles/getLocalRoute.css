@@ -1,0 +1,96 @@
+:root {
+    --border: #005050;
+    --outBorder: #ffffff;
+    --backgroundInputs: #0059ff;
+    --lowBackground: #82aaff;
+    --borderRadius-general: 10px;
+    --textWhite: #ffffff;
+    --textBlack: #000000;
+}
+
+html,
+body {
+    height: 98%;
+}
+
+body,
+header,
+main {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+header,
+main {
+    height: 50%;
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+}
+
+header h1 {
+    text-align: center;
+}
+
+#inputRoute {
+    outline: 2px solid var(--border);
+    border-radius: var(--borderRadius-general);
+}
+
+#inputRoute:focus {
+    outline: 3px solid var(--backgroundInputs);
+}
+
+#ButtonRoute {
+    margin-top: 40px;
+    width: 120px;
+    height: 50px;
+    border: 3px solid var(--border);
+    background: var(--backgroundInputs);
+    color: var(--textWhite);
+    font-size: large;
+    border-radius: var(--borderRadius-general);
+    animation: all 1s ease;
+}
+
+#ButtonRoute:hover {
+    background: var(--textWhite);
+    color: var(--backgroundInputs);
+    font-size: large;
+    border-radius: var(--borderRadius-general);
+    animation: all 1s ease;
+}
+
+.main-1,
+.main-2 {
+    width: 47.5%;
+}
+
+.main-2,
+#filesArea2 {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#filesArea2 {
+    width: 300px;
+    height: 300px;
+    border-radius: var(--borderRadius-general);
+}
+
+.inactive2 {
+    border: dashed 5px var(--border);
+}
+
+.active2 {
+    border: dashed 5px var(--outBorder);
+    background: var(--lowBackground);
+}

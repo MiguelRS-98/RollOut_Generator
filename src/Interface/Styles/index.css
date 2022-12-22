@@ -1,0 +1,95 @@
+  :root {
+    --border: #005050;
+    --outBorder: #ffffff;
+    --backgroundInputs: #0059ff;
+    --lowBackground: #82aaff;
+    --borderRadius-general: 10px;
+    --textWhite: #ffffff;
+    --textBlack: #000000;
+    --Wrong: #ff000080;
+    --Pass: #00ff0080;
+    --gray: #00000030;
+  }
+
+  html {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body {
+    margin: 0;
+    width: 800px;
+    min-height: 90vh;
+  }
+
+  body,
+  main,
+  #filesArea1, #filesArea2, #filesArea3{
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 15px;
+  }
+
+  main {
+    flex-direction: row;
+  }
+
+  header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  code {
+    background-color: var(--gray);
+    border-radius: 5px;
+  }
+
+  #filesArea1, #filesArea2, #filesArea3{
+    padding: 15px;
+    width: 300px;
+    height: 300px;
+    border-radius: var(--borderRadius-general);
+  }
+
+  #filesSettingsButton1, #filesSettingsButton2, #filesSettingsButton3{
+    width: 200px;
+    height: 50px;
+    border: 3px solid var(--border);
+    background: var(--backgroundInputs);
+    color: var(--textWhite);
+    font-size: large;
+    border-radius: var(--borderRadius-general);
+    animation: all 1s ease;
+  }
+
+  #filesSettingsButton1:hover, #filesSettingsButton2:hover, #filesSettingsButton3:hover{
+    background: var(--textWhite);
+    color: var(--backgroundInputs);
+    font-size: large;
+    border-radius: var(--borderRadius-general);
+    animation: all 1s ease;
+  }
+
+  .inactive {
+    border: dashed 5px var(--border);
+  }
+
+  .active {
+    border: dashed 5px var(--outBorder);
+    background: var(--lowBackground);
+  }
+
+  .checkwrong {
+    background: var(--Wrong);
+  }
+
+  .checkpass  {
+    background: var(--Pass);
+  }
