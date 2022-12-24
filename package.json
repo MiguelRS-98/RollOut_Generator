@@ -18,7 +18,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.4",

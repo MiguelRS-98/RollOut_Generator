@@ -1,0 +1,4 @@
+{
+    "FilesDirectory": "<FileSystem>\n<extensions>\n<path fileType='tbl'>db/dll/tables</path>\n<path fileType='idx'>db/dll/indexes</path>\n<path fileType='csv'>db/data/load/base/safetoload</path>\n<path fileType='csv'>db/data/load/base/bootstraponly</path>\n<path fileType='sql'>scripts</path>\n<path fileType='mtrg'>src/cmdsrc/varint</path>\n<path fileType='mcmd'>src/cmdsrc/varint</path>\n</extensions>\n</FileSystem>",
+    "PoliciesDirectory": "<Hola></Hola>"
+}

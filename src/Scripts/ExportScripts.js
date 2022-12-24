@@ -1,3 +1,4 @@
+const { FilesTratment } = require("./FileTreatment/UploadFiles");
 const { EventsProcess } = require("./ipcConection/Events");
 const { GlobalScripts } = require("./Scripts/GlobalScripts");
 const { GlobalShortcuts } = require("./Scripts/GlobalShortcuts");
@@ -7,5 +8,6 @@ module.exports = {
     GlobalShortcuts,
     EventsProcess,
     MainProcess,
-    GlobalScripts
+    GlobalScripts,
+    FilesTratment
 }

@@ -25,7 +25,7 @@ filesAreaXML.addEventListener('drop', e => {
     filesAreaXML.classList.remove('active');
     if (fileXML[0].type === 'text/xml') {
         filesAreaXML.classList.add('checkpass');
-        window.electron.XMLFile(fileXML[0].path, fileXML[0].type)
+        window.setXML.loadXML(fileXML[0].path, fileXML[0].type, 'Router')
         filesAreaTextXML.textContent = `Archivo ${fileXML[0].name} Cargado`;
     } else {
         filesAreaXML.classList.add('checkwrong');
@@ -65,14 +65,12 @@ filesAreaPolicies.addEventListener('drop', e => {
     filesAreaPolicies.classList.remove('active');
     if (filePolicies[0].type === 'text/xml') {
         filesAreaPolicies.classList.add('checkpass');
-        window.electron.PoliciesFile(filePolicies[0].path, filePolicies[0].type);
-        State_number++
+        window.setXML.loadXML(filePolicies[0].path, filePolicies[0].type, 'Policies');
         filesAreaTextPolicies.textContent = `Archivo ${filePolicies[0].name} Cargado`;
     } else {
         filesAreaPolicies.classList.add('checkwrong');
         filesAreaTextPolicies.textContent = `Archivo ${filePolicies[0].name} Invalido`
         filesAreaTextPolicies.textContent = `Archivo ${filePolicies[0].name} Sin Subir`
-
     }
 })
 
