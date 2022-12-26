@@ -9,6 +9,7 @@
     --Wrong: #ff000080;
     --Pass: #00ff0080;
     --gray: #00000030;
+    --Exit: #ff0000;
   }
 
   html {
@@ -25,7 +26,9 @@
 
   body,
   main,
-  #filesArea1, #filesArea2, #filesArea3{
+  #filesArea1,
+  #filesArea2,
+  #filesArea3 {
     display: flex;
     text-align: center;
     flex-direction: column;
@@ -51,15 +54,19 @@
     border-radius: 5px;
   }
 
-  #filesArea1, #filesArea2, #filesArea3{
+  #filesArea1,
+  #filesArea2,
+  #filesArea3 {
     padding: 15px;
-    width: 300px;
-    height: 300px;
+    width: 500px;
+    height: 200px;
     border-radius: var(--borderRadius-general);
   }
 
-  #filesSettingsButton1, #filesSettingsButton2, #filesSettingsButton3{
-    width: 200px;
+  #filesSettingsButton1,
+  #filesSettingsButton2,
+  #filesSettingsButton3 {
+    width: 230px;
     height: 50px;
     border: 3px solid var(--border);
     background: var(--backgroundInputs);
@@ -69,9 +76,18 @@
     animation: all 1s ease;
   }
 
-  #filesSettingsButton1:hover, #filesSettingsButton2:hover, #filesSettingsButton3:hover{
+  #filesSettingsButton2:hover,
+  #filesSettingsButton3:hover {
     background: var(--textWhite);
     color: var(--backgroundInputs);
+    font-size: large;
+    border-radius: var(--borderRadius-general);
+    animation: all 1s ease;
+  }
+
+  #filesSettingsButton1:hover {
+    background: var(--Exit);
+    color: var(--outBorder);
     font-size: large;
     border-radius: var(--borderRadius-general);
     animation: all 1s ease;
@@ -90,6 +106,6 @@
     background: var(--Wrong);
   }
 
-  .checkpass  {
+  .checkpass {
     background: var(--Pass);
   }

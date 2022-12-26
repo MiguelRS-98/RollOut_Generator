@@ -1,23 +1,23 @@
 // Node Modules
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { readdirSync } = require('node:fs');
-const { homedir } = require('os');
+const { homedir, hostname } = require('os');
 const { dirname, join } = require('node:path');
 
 // Local Modules
 const { Startup } = require('./Startup');
-const { GlobalShortcuts, EventsProcess, MainProcess, GlobalScripts, FilesTratment } = require('./Scripts/ExportScripts');
+const { GlobalShortcuts, EventsProcess, MainProcess, GlobalScripts, FilesTratment, UploadFiles } = require('./Scripts/ExportScripts');
 
 //Imports
-const { FilesDirectory, PoliciesDirectory } = require('./Resources/XMLDataDefault.json')
-
-console.log(FilesDirectory, "\n", PoliciesDirectory);
+const { FilesDirectory, PoliciesDirectory } = require('./Resources/XMLDataDefault.json');
 
 // Call Classes Preset JS Files
-const { UserSettingsFileGenerator, UserSettingsFileDelete, __init__ } = new Startup();
+const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset, __init__ } = new Startup();
 const { registerShortcut } = new GlobalShortcuts();
 const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
+const { TransformXMLToJSON, SendFileToRollOutLocation } = new FilesTratment();
+const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
 const { ParseFile } = new GlobalScripts();
 
 // Procces Start
@@ -29,13 +29,13 @@ let Settings;
  * UserSettings --> Data from this JSON file
  */
 try {
-  const { directoryPackage, directoryPolicies, directoryRoutes, status, typeStatus } = require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json'));
+  const { directoryPackage, directoryPolicies, directoryRoutes, status, XMLConfig } = require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json'));
   Settings = {
     setDirectoryPackage: directoryPackage,
     setDirectoryPolicies: directoryPolicies,
     setDirectoryRoutes: directoryRoutes,
     setStatus: status,
-    setTypeStatus: typeStatus
+    setXMLConfig: XMLConfig
   }
 } catch (err) {
   restartApplication();
@@ -47,9 +47,9 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     title: 'Move Files of System',
     minWidth: 800,
-    minHeight: 600,
+    minHeight: 525,
     width: 800,
-    height: 600,
+    height: 525,
     x: 0,
     y: 0,
     webPreferences: {
@@ -61,6 +61,32 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/index.html'));
+
+  try {
+    if (Settings.setXMLConfig === false) {
+      const config = new BrowserWindow({
+        parent: mainWindow,
+        width: 800,
+        height: 500,
+        resizable: false,
+        maxWidth: 800,
+        maxHeight: 500,
+        minimizable: false,
+        maximizable: false,
+        closable: false,
+        center: true,
+        modal: true,
+        webPreferences: {
+          devTools: true,
+          nodeIntegration: true,
+          preload: join(__dirname, 'Preloads/PreloadXML.js')
+        }
+      })
+      config.loadFile(join(__dirname, 'Interface/Views/WindowXML.html'));
+    }
+  } catch (err) {
+    console.log('Throw JavaScript Node Exception To Create Settings Directory');
+  }
 
   try {
     // Check the user config in settings JSON file
@@ -113,10 +139,10 @@ ipcMain.on(
   (event, inputRouteData) => {
     UserSettingsFileGenerator({
       status: true,
-      typeStatus: "DEFAULT",
+      XMLConfig: true,
       directoryPackage: inputRouteData,
-      directoryRoutes: Settings.setDirectoryRoutes,
-      directoryPolicies: Settings.setDirectoryPolicies
+      directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Router.xml'),
+      directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
     })
     restartApplication();
   }
@@ -125,7 +151,6 @@ ipcMain.on(
 ipcMain.on(
   'RestoreSettingFile',
   () => {
-    console.log(readdirSync(join(homedir(), '\\AppData')));
     UserSettingsFileDelete();
     restartApplication();
   }
@@ -134,25 +159,20 @@ ipcMain.on(
 ipcMain.on(
   'SetXMLConfigFiles',
   () => {
-    const config = new BrowserWindow({
-      width: 800,
-      height: 500,
-      resizable: false,
-      maxWidth: 800,
-      maxHeight: 500,
-      minimizable: false,
-      maximizable: false,
-      center: true,
-      modal: true,
-      webPreferences: {
-        devTools: true,
-        nodeIntegration: true,
-        preload: join(__dirname, 'Preloads/PreloadXML.js')
-      }
+    UserSettingsFileGenerator({
+      status: true,
+      XMLConfig: false,
+      directoryPackage: require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json')).directoryPackage,
+      directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Router.xml'),
+      directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
     })
-    config.loadFile(join(__dirname, 'Interface/Views/WindowXML.html'));
+    restartApplication();
   }
 );
+// -------------------------------------------------- // -------------------------------------------------- //
+ipcMain.on('ResetConfig', () => {
+  UserSettingsFileReset();
+})
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on(
   'SendXMLFiles',
@@ -163,8 +183,31 @@ ipcMain.on(
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on(
   'UploadFiles',
-  (event, JSONConverted) => {
-
+  (event, JsonData) => {
+    // Definitions
+    let XMLRouter, XMLPolicies;
+    // Conditional Event To Check The Router CUSTOM Or DEFAULT
+    XMLRouter = TransformXMLToJSON(Settings.setDirectoryRoutes);
+    let CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
+    XMLPolicies = TransformXMLToJSON(Settings.setDirectoryPolicies);
+    let CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
+    if (JsonData.fileName.includes('.csv')) {
+      let FileRouter = TreatmentFilesRoutes(CreateDirPolicies);
+      SendFileToRollOutLocation(FileRouter, JsonData.fileLocation)
+    } else {
+      let FilePolicies = TreatmentFilesRoutes(CreateDirRouter);
+      SendFileToRollOutLocation(FilePolicies, JsonData.fileLocation)
+    }
   }
 );
 
+ipcMain.on('Restart', () => {
+  UserSettingsFileGenerator({
+    status: true,
+    XMLConfig: true,
+    directoryPackage: require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json')).directoryPackage,
+    directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\CUSTOM\\Router.xml'),
+    directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\CUSTOM\\Policies.xml')
+  });
+  restartApplication();
+})

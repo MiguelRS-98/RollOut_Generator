@@ -1,17 +1,20 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-function loadXML(XMLFilePath, XMLFileName, Type){
+function loadXML(XMLFilePath, Identify){
     let Data = {
         Path: XMLFilePath,
-        Name: XMLFileName,
-        Type: Type
+        Type: Identify
     }
     ipcRenderer.send('SendXMLFiles', Data)
+}
+function Restart() {
+    ipcRenderer.send('Restart')
 }
 
 contextBridge.exposeInMainWorld(
     'setXML',
     {
-        loadXML
+        loadXML,
+        Restart
     }
 )

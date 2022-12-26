@@ -9,11 +9,14 @@ class Startup {
         // Default Settings
         this.USER_SETTINGS = {
             status: false,
-            typeStatus: "DEFAULT",
+            XMLConfig: true,
             directoryPackage: "Not Asigned",
-            directoryRoutes: "Not Asigned",
-            directoryPolicies: "Not Asigned"
+            directoryRoutes: `${homedir()}\\AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Router.xml`,
+            directoryPolicies: `${homedir()}\\AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml`
         }
+    }
+    UserSettingsFileReset() {
+        writeFileSync(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json'), JSON.stringify(this.USER_SETTINGS), { encoding: 'utf-8' })
     }
     UserSettingsFileGenerator(FileDataSettings) {
         // Set Settings JSON File
@@ -64,7 +67,6 @@ class Startup {
         }
     }
     __init__(FilesRouter, PoliciesRouter) {
-        console.log(FilesRouter, "\n", "\n", PoliciesRouter);
         new Startup().UserSettingsDirGenerator();
         new Startup().UserSettingsDirXMLGenerator();
         new Startup().UserSettingsFileGenerator();

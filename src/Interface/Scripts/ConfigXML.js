@@ -1,3 +1,6 @@
+// Dependencies
+let State_Number = 0, Router, Policies;
+
 //Drop & Drop to XML
 
 //DOM Elements
@@ -25,7 +28,8 @@ filesAreaXML.addEventListener('drop', e => {
     filesAreaXML.classList.remove('active');
     if (fileXML[0].type === 'text/xml') {
         filesAreaXML.classList.add('checkpass');
-        window.setXML.loadXML(fileXML[0].path, fileXML[0].type, 'Router')
+        Router = fileXML[0].path;
+        State_Number++
         filesAreaTextXML.textContent = `Archivo ${fileXML[0].name} Cargado`;
     } else {
         filesAreaXML.classList.add('checkwrong');
@@ -63,13 +67,14 @@ filesAreaPolicies.addEventListener('drop', e => {
     e.preventDefault();
     filePolicies = e.dataTransfer.files;
     filesAreaPolicies.classList.remove('active');
-    if (filePolicies[0].type === 'text/xml') {
+    if (filePolicies[0].type === 'text/xml' && State_Number === 1) {
         filesAreaPolicies.classList.add('checkpass');
-        window.setXML.loadXML(filePolicies[0].path, filePolicies[0].type, 'Policies');
+        Policies = filePolicies[0].path;
+        State_Number++
+        UploadXMLFiles();
         filesAreaTextPolicies.textContent = `Archivo ${filePolicies[0].name} Cargado`;
     } else {
-        filesAreaPolicies.classList.add('checkwrong');
-        filesAreaTextPolicies.textContent = `Archivo ${filePolicies[0].name} Invalido`
+        filesAreaPolicies.classList.add('checkwrong')
         filesAreaTextPolicies.textContent = `Archivo ${filePolicies[0].name} Sin Subir`
     }
 })
@@ -77,3 +82,11 @@ filesAreaPolicies.addEventListener('drop', e => {
 inputFilesPolicies.addEventListener('change', e => {
     filePolicies = this.files;
 })
+
+function UploadXMLFiles() {
+    if (State_Number === 2) {
+        window.setXML.loadXML(Router, 'Router');
+        window.setXML.loadXML(Policies, 'Policies');
+        window.setXML.Restart();
+    }
+}

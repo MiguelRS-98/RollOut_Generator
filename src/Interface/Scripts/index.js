@@ -2,6 +2,7 @@
 const filesSettingsButton1 = document.getElementById('filesSettingsButton1');
 const filesSettingsButton2 = document.getElementById('filesSettingsButton2');
 const filesSettingsButton3 = document.getElementById('filesSettingsButton3');
+const filesSettingsButton4 = document.getElementById('filesSettingsButton4');
 
 //Dependencies
 let State_number = 0;
@@ -33,7 +34,6 @@ filesArea.addEventListener('drop', e => {
     retrieveFiles(files);
     filesArea.classList.remove('active');
     filesAreaText.textContent = 'Sube los archivos';
-    console.log(State_number);
 })
 
 inputFiles.addEventListener('change', e => {
@@ -50,9 +50,7 @@ function retrieveFiles(files) {
 }
 
 function processFiles(file) {
-    if (State_number >= 2) {
-        window.main.getFiles(file.name, file.path);
-    }
+    window.main.getFiles(file.name, file.path);
 }
 
 // Listener To Button Where The User Want Restore Config Of The App

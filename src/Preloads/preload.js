@@ -14,12 +14,25 @@ function RestoreSettings() {
 function SetXMLConfigFiles() {
     ipcRenderer.send('SetXMLConfigFiles')
 };
+function getFiles(Name, Path) {
+    const fileTypeValidate = ['.mcmd', '.sql', '.mtrg', '.idx', '.tbl', '.csv'];
+    for (let fileType of fileTypeValidate) {
+        if (Name.includes(fileType) === true) {
+            const jsonData = {
+                fileName: Name,
+                fileLocation: Path
+            };
+            ipcRenderer.send('UploadFiles', jsonData)
+        }
+    }
+}
 
 contextBridge.exposeInMainWorld(
     'main',
     {
         ViewLocals,
         RestoreSettings,
-        SetXMLConfigFiles
+        SetXMLConfigFiles,
+        getFiles
     }
 )
