@@ -9,11 +9,36 @@ class FilesTratment {
         let result = xml2json(readFileSync(XMLPathFile, { encoding: 'utf-8' }), { compact: true });
         return result;
     }
-    SendFileToRollOutLocation(Data, filePath) {
+    fixRoute(route) {
+        let newData;
+        let newVariable = route.split("\\")
+        for (let i = 0; i < newVariable.length; i++) {
+            newData += `/${newVariable[i]}`
+        }
+        return newData.split('undefined/')[1]
+    };
+    SendFileToRollOutLocationRouter(Data, filePath, Name, directoryPackage) {
         Data.map(element => {
-            copyFile(filePath, join(require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json').directoryPackage), element.routes), (err) => {
-                err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
-            })
+            let Destination = new FilesTratment().fixRoute(element.routes);
+            let PathFile = new FilesTratment().fixRoute(filePath);
+            console.log(Destination, "\n", directoryPackage);
+            if (Name.includes(element.type)) {
+                copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
+                    err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
+                })
+            }
+        });
+    }
+    SendFileToRollOutLocationPolicies(Data, filePath, Name, directoryPackage) {
+        Data.map(element => {
+            let Destination = new FilesTratment().fixRoute(element.routes);
+            let PathFile = new FilesTratment().fixRoute(filePath);
+            console.log(Destination, "\n", directoryPackage);
+            if (Name.includes(element.type)) {
+                copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
+                    err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
+                })
+            }
         });
     }
 }

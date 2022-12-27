@@ -16,7 +16,7 @@ const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset
 const { registerShortcut } = new GlobalShortcuts();
 const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
-const { TransformXMLToJSON, SendFileToRollOutLocation } = new FilesTratment();
+const { TransformXMLToJSON, SendFileToRollOutLocationRouter, SendFileToRollOutLocationPolicies } = new FilesTratment();
 const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
 const { ParseFile } = new GlobalScripts();
 
@@ -193,10 +193,10 @@ ipcMain.on(
     let CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
     if (JsonData.fileName.includes('.csv')) {
       let FileRouter = TreatmentFilesRoutes(CreateDirPolicies);
-      SendFileToRollOutLocation(FileRouter, JsonData.fileLocation)
+      SendFileToRollOutLocationRouter(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
     } else {
       let FilePolicies = TreatmentFilesRoutes(CreateDirRouter);
-      SendFileToRollOutLocation(FilePolicies, JsonData.fileLocation)
+      SendFileToRollOutLocationPolicies(FilePolicies, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
     }
   }
 );
