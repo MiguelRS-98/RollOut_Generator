@@ -1,12 +1,11 @@
 // Node Modules
 const { app, BrowserWindow, ipcMain } = require('electron');
-const { readdirSync } = require('node:fs');
-const { homedir, hostname } = require('os');
-const { dirname, join } = require('node:path');
+const { homedir } = require('os');
+const { join } = require('node:path');
 
 // Local Modules
 const { Startup } = require('./Startup');
-const { GlobalShortcuts, EventsProcess, MainProcess, GlobalScripts, FilesTratment, UploadFiles } = require('./Scripts/ExportScripts');
+const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, UploadFiles } = require('./Scripts/ExportScripts');
 
 //Imports
 const { FilesDirectory, PoliciesDirectory } = require('./Resources/XMLDataDefault.json');
@@ -18,7 +17,6 @@ const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
 const { TransformXMLToJSON, SendFileToRollOutLocationRouter, SendFileToRollOutLocationPolicies } = new FilesTratment();
 const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
-const { ParseFile } = new GlobalScripts();
 
 // Procces Start
 __init__(FilesDirectory, PoliciesDirectory);
@@ -45,26 +43,28 @@ try {
 const createWindow = () => {
   // Create the Main Window.
   const mainWindow = new BrowserWindow({
-    title: 'Move Files of System',
+    icon: join(__dirname, "Resources/NetLogistiK.jpeg"),
     minWidth: 800,
     minHeight: 525,
     width: 800,
     height: 525,
-    x: 0,
-    y: 0,
+    center: true,
+    resizable: true,
+    closable: true,
     webPreferences: {
       devTools: true,
       nodeIntegration: true,
       preload: join(__dirname, 'Preloads/preload.js'),
     }
   });
-
+  mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/index.html'));
 
   try {
     if (Settings.setXMLConfig === false) {
       const config = new BrowserWindow({
+        icon: join(__dirname, "Resources/NetLogistiK.jpeg"),
         parent: mainWindow,
         width: 800,
         height: 500,
@@ -82,6 +82,7 @@ const createWindow = () => {
           preload: join(__dirname, 'Preloads/PreloadXML.js')
         }
       })
+      config.setMenu(null);
       config.loadFile(join(__dirname, 'Interface/Views/WindowXML.html'));
     }
   } catch (err) {
@@ -93,6 +94,7 @@ const createWindow = () => {
     if (!Settings.setStatus) {
       // Create the Modal Window Settings Setter.
       const child = new BrowserWindow({
+        icon: join(__dirname, "Resources/NetLogistiK.jpeg"),
         parent: mainWindow,
         width: 400,
         height: 400,
@@ -111,7 +113,7 @@ const createWindow = () => {
           preload: join(__dirname, 'Preloads/preloadRoute.js')
         }
       });
-      //child.setMenu(null);
+      child.setMenu(null);
       child.loadFile(join(__dirname, '/Interface/Views/WindowSettings.html'));
     }
   } catch (err) {

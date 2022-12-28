@@ -1,21 +1,34 @@
 {
-  "name": "movefiles_1.5",
-  "productName": "movefiles_1.5",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "name": "movefiles",
+  "productName": "Mover Archivos",
+  "version": "1.5.0",
+  "description": "Generador de carpetas y archivos para RollOuts",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "lint": "echo \"No linting configured\"",
+    "build-win": "electron-builder -w",
+    "build-lin": "electron-builder -l",
+    "build-mac": "electron-builder -m"
   },
   "keywords": [],
   "author": {
     "name": "PintoGamer64",
+    "url": "https://github.com/PintoGamer64",
     "email": "pintogamer64@gmail.com"
   },
+  "repository": {
+    "url": "https://github.com/PintoGamer64/Move_Files"
+  },
+  "bugs": {
+  "email": "pintogamer64@gmail.com",
+    "url": "https://github.com/PintoGamer64/Move_Files/issues"
+  },
+  "os": ["windows", "macos", "linux"],
+  "icon": "https://media.licdn.com/dms/image/C4E0BAQEi8fkR9gZFjw/company-logo_200_200/0/1635287373325?e=2147483647&v=beta&t=iJ548Bb9hRCX1uqg7KnyyptKwCcxoLRIq5BocYpw2J8",
   "license": "MIT",
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
@@ -27,6 +40,7 @@
     "@electron-forge/maker-rpm": "^6.0.4",
     "@electron-forge/maker-squirrel": "^6.0.4",
     "@electron-forge/maker-zip": "^6.0.4",
-    "electron": "22.0.0"
+    "electron": "22.0.0",
+    "electron-builder": "^23.6.0"
   }
 }
