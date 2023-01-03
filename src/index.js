@@ -58,7 +58,7 @@ const createWindow = () => {
       preload: join(__dirname, 'Preloads/preload.js'),
     }
   });
-  mainWindow.setMenu(null);
+  //mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/index.html'));
 

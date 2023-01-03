@@ -5,3 +5,7 @@
     height: 300px;
     border-radius: var(--borderRadius-general);
 }
+
+#main2{
+    flex-direction: row;
+}

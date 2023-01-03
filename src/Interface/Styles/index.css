@@ -38,7 +38,7 @@
   }
 
   main {
-    flex-direction: row;
+    flex-direction: column;
   }
 
   header {
@@ -57,10 +57,35 @@
   #filesArea1,
   #filesArea2,
   #filesArea3 {
-    padding: 15px;
+    padding: 45px;
     width: 500px;
     height: 200px;
     border-radius: var(--borderRadius-general);
+  }
+
+  #filesJavaSwitch {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    margin: 45px;
+    height: 40px;
+    width: 100%;
+    border: solid 2px #000000;
+    margin: 0;
+  }
+
+  #filesJavaSwitchText {
+    text-align: center;
+    width: 100%;
+    margin: 0;
+  }
+
+  .MTFActive {
+    background: var(--Pass);
+  }
+
+  .MTFDesactive {
+    background: var(--Wrong);
   }
 
   #filesSettingsButton1,

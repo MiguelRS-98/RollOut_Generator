@@ -3,6 +3,7 @@ const filesSettingsButton1 = document.getElementById('filesSettingsButton1');
 const filesSettingsButton2 = document.getElementById('filesSettingsButton2');
 const filesSettingsButton3 = document.getElementById('filesSettingsButton3');
 const filesSettingsButton4 = document.getElementById('filesSettingsButton4');
+const filesJavaSwitch = document.getElementById('filesJavaSwitch');
 
 //Dependencies
 let State_number = 0;
@@ -61,3 +62,13 @@ filesSettingsButton2.addEventListener('click', () => window.main.ViewLocals());
 
 // Listener To Button Where The User Want Create A Custom Config With XML Files
 filesSettingsButton3.addEventListener('click', () => window.main.SetXMLConfigFiles());
+
+filesJavaSwitch.addEventListener('click', () => {
+    if (filesJavaSwitch.className === 'MTFActive') {
+        filesJavaSwitch.classList.remove('MTFActive');
+        filesJavaSwitch.classList.add('MTFDesactive');
+    } else if (filesJavaSwitch.className === 'MTFDesactive') {
+        filesJavaSwitch.classList.remove('MTFDesactive');
+        filesJavaSwitch.classList.add('MTFActive');
+    }
+})
