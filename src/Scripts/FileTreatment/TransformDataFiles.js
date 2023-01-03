@@ -1,5 +1,5 @@
 // Node Modules
-const { readFileSync, copyFile } = require('node:fs');
+const { readFileSync, copyFile, readdirSync, rmdirSync } = require('node:fs');
 const { join } = require('node:path');
 const { xml2json } = require('xml-js');
 
@@ -16,30 +16,26 @@ class FilesTratment {
         }
         return newData.split('undefined/')[1]
     };
-    SendFileToRollOutLocationRouter(Data, filePath, Name, directoryPackage) {
+    FoldersContentValidate(Data, directoryPackage) {
         Data.map(element => {
+            let tempDirectory = readdirSync(join(new FilesTratment().fixRoute(directoryPackage), element.routes), { encoding: 'utf-8' })
+            console.log(`${join(new FilesTratment().fixRoute(directoryPackage), element.routes)} \n "(/)" \n `, tempDirectory, "\n");
+            if (tempDirectory.length < 1) {
+                rmdirSync(join(new FilesTratment().fixRoute(directoryPackage), element.routes))
+            }
+        })
+    }
+    async SendFileToRollOutLocation(Data, filePath, Name, directoryPackage) {
+        await Data.map(element => {
             let Destination = new FilesTratment().fixRoute(element.routes);
             let PathFile = new FilesTratment().fixRoute(filePath);
-            console.log(Destination, "\n", directoryPackage);
             if (Name.includes(element.type)) {
                 copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
                     err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
                 })
             }
         });
-    }
-    SendFileToRollOutLocationPolicies(Data, filePath, Name, directoryPackage) {
-        Data.map(element => {
-            let Destination = new FilesTratment().fixRoute(element.routes);
-            let PathFile = new FilesTratment().fixRoute(filePath);
-            console.log(Destination, "\n", directoryPackage);
-            if (Name.includes(element.type)) {
-                copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
-                    err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
-                })
-            }
-        });
-    }
+    };
 }
 
 module.exports = {

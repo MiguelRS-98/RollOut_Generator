@@ -15,13 +15,14 @@ const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset
 const { registerShortcut } = new GlobalShortcuts();
 const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
-const { TransformXMLToJSON, SendFileToRollOutLocationRouter, SendFileToRollOutLocationPolicies } = new FilesTratment();
+const { TransformXMLToJSON, SendFileToRollOutLocation, FoldersContentValidate } = new FilesTratment();
 const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
 
 // Procces Start
 __init__(FilesDirectory, PoliciesDirectory);
 
-let Settings;
+// Definitions
+let Settings, FileRouter, FilePolicies, XMLRouter, XMLPolicies;
 
 /**
  * UserSettings --> Data from this JSON file
@@ -186,23 +187,29 @@ ipcMain.on(
 ipcMain.on(
   'UploadFiles',
   (event, JsonData) => {
-    // Definitions
-    let XMLRouter, XMLPolicies;
     // Conditional Event To Check The Router CUSTOM Or DEFAULT
     XMLRouter = TransformXMLToJSON(Settings.setDirectoryRoutes);
     let CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
     XMLPolicies = TransformXMLToJSON(Settings.setDirectoryPolicies);
     let CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
     if (JsonData.fileName.includes('.csv')) {
-      let FileRouter = TreatmentFilesRoutes(CreateDirPolicies);
-      SendFileToRollOutLocationRouter(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
+      FileRouter = TreatmentFilesRoutes(CreateDirPolicies);
+      SendFileToRollOutLocation(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
     } else {
-      let FilePolicies = TreatmentFilesRoutes(CreateDirRouter);
-      SendFileToRollOutLocationPolicies(FilePolicies, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
+      FilePolicies = TreatmentFilesRoutes(CreateDirRouter);
+      SendFileToRollOutLocation(FilePolicies, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
     }
   }
 );
-
+// -------------------------------------------------- // -------------------------------------------------- //
+ipcMain.on(
+  'RemoveDirectories',
+  () => {
+    FoldersContentValidate(FileRouter, Settings.setDirectoryPackage);
+    FoldersContentValidate(FilePolicies, Settings.setDirectoryPackage);
+  }
+);
+// -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('Restart', () => {
   UserSettingsFileGenerator({
     status: true,

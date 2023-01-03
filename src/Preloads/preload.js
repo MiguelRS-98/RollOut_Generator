@@ -26,6 +26,9 @@ function getFiles(Name, Path) {
         }
     }
 }
+function removeEmptyDirectories(){
+    ipcRenderer.send('RemoveDirectories')
+};
 
 contextBridge.exposeInMainWorld(
     'main',
@@ -33,6 +36,7 @@ contextBridge.exposeInMainWorld(
         ViewLocals,
         RestoreSettings,
         SetXMLConfigFiles,
-        getFiles
+        getFiles,
+        removeEmptyDirectories
     }
 )
