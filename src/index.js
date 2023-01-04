@@ -196,7 +196,7 @@ ipcMain.on(
     FilePolicies = TreatmentFilesRoutes(CreateDirPolicies);
     if (JsonData.fileName.includes('.csv')) {
       SendFileToRollOutLocation(FilePolicies, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
-    } else  if (JsonData.fileName.includes('.java') || JsonData.fileName.includes('.properties')) {
+    } else if (JsonData.fileName.includes('.java') || JsonData.fileName.includes('.properties')) {
       SendFileToRollOutLocationJava(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage, JsonData.Java);
     } else {
       SendFileToRollOutLocation(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
@@ -207,8 +207,10 @@ ipcMain.on(
 ipcMain.on(
   'RemoveDirectories',
   () => {
-    //FoldersContentValidate(FileRouter, Settings.setDirectoryPackage);
-    //FoldersContentValidate(FilePolicies, Settings.setDirectoryPackage);
+    for (let i = 0; i < 10; i++) {
+      FoldersContentValidate(FilePolicies, Settings.setDirectoryPackage);
+      FoldersContentValidate(FileRouter, Settings.setDirectoryPackage);
+    }
   }
 );
 // -------------------------------------------------- // -------------------------------------------------- //
