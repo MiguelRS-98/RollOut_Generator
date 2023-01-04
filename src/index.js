@@ -15,7 +15,7 @@ const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset
 const { registerShortcut } = new GlobalShortcuts();
 const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
-const { TransformXMLToJSON, SendFileToRollOutLocation, FoldersContentValidate } = new FilesTratment();
+const { TransformXMLToJSON, SendFileToRollOutLocation, FoldersContentValidate, SendFileToRollOutLocationJava } = new FilesTratment();
 const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
 
 // Procces Start
@@ -46,9 +46,9 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     icon: join(__dirname, "Resources/NetLogistiK.jpeg"),
     minWidth: 800,
-    minHeight: 525,
+    minHeight: 600,
     width: 800,
-    height: 525,
+    height: 600,
     center: true,
     resizable: true,
     closable: true,
@@ -192,12 +192,14 @@ ipcMain.on(
     let CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
     XMLPolicies = TransformXMLToJSON(Settings.setDirectoryPolicies);
     let CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
+    FileRouter = TreatmentFilesRoutes(CreateDirRouter);
+    FilePolicies = TreatmentFilesRoutes(CreateDirPolicies);
     if (JsonData.fileName.includes('.csv')) {
-      FileRouter = TreatmentFilesRoutes(CreateDirPolicies);
-      SendFileToRollOutLocation(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
-    } else {
-      FilePolicies = TreatmentFilesRoutes(CreateDirRouter);
       SendFileToRollOutLocation(FilePolicies, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
+    } else  if (JsonData.fileName.includes('.java') || JsonData.fileName.includes('.properties')) {
+      SendFileToRollOutLocationJava(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage, JsonData.Java);
+    } else {
+      SendFileToRollOutLocation(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
     }
   }
 );
@@ -205,8 +207,8 @@ ipcMain.on(
 ipcMain.on(
   'RemoveDirectories',
   () => {
-    FoldersContentValidate(FileRouter, Settings.setDirectoryPackage);
-    FoldersContentValidate(FilePolicies, Settings.setDirectoryPackage);
+    //FoldersContentValidate(FileRouter, Settings.setDirectoryPackage);
+    //FoldersContentValidate(FilePolicies, Settings.setDirectoryPackage);
   }
 );
 // -------------------------------------------------- // -------------------------------------------------- //

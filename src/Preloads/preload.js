@@ -14,13 +14,14 @@ function RestoreSettings() {
 function SetXMLConfigFiles() {
     ipcRenderer.send('SetXMLConfigFiles')
 };
-function getFiles(Name, Path) {
-    const fileTypeValidate = ['.mcmd', '.sql', '.mtrg', '.idx', '.tbl', '.csv'];
+function getFiles(Name, Path, JavaType) {
+    const fileTypeValidate = ['.mcmd', '.sql', '.mtrg', '.idx', '.tbl', '.csv', '.java', '.properties'];
     for (let fileType of fileTypeValidate) {
         if (Name.includes(fileType) === true) {
             const jsonData = {
                 fileName: Name,
-                fileLocation: Path
+                fileLocation: Path,
+                Java: JavaType
             };
             ipcRenderer.send('UploadFiles', jsonData)
         }

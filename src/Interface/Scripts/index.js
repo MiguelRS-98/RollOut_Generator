@@ -3,10 +3,11 @@ const filesSettingsButton1 = document.getElementById('filesSettingsButton1');
 const filesSettingsButton2 = document.getElementById('filesSettingsButton2');
 const filesSettingsButton3 = document.getElementById('filesSettingsButton3');
 const filesSettingsButton4 = document.getElementById('filesSettingsButton4');
+const filesJavaSwitchText = document.getElementById('filesJavaSwitchText');
 const filesJavaSwitch = document.getElementById('filesJavaSwitch');
 
 //Dependencies
-let State_number = 0;
+let State_number = 0, JavaType = 'class' ;
 
 //Drop & Drop to Command Files
 
@@ -51,7 +52,7 @@ function retrieveFiles(files) {
 }
 
 function processFiles(file) {
-    window.main.getFiles(file.name, file.path);
+    window.main.getFiles(file.name, file.path, JavaType);
 }
 
 // Listener To Button Where The User Want Restore Config Of The App
@@ -67,8 +68,14 @@ filesJavaSwitch.addEventListener('click', () => {
     if (filesJavaSwitch.className === 'MTFActive') {
         filesJavaSwitch.classList.remove('MTFActive');
         filesJavaSwitch.classList.add('MTFDesactive');
+        filesJavaSwitchText.textContent = 'Archivos Java MTF inhabilitado'
+        JavaType = 'class';
+        console.log(JavaType);
     } else if (filesJavaSwitch.className === 'MTFDesactive') {
         filesJavaSwitch.classList.remove('MTFDesactive');
         filesJavaSwitch.classList.add('MTFActive');
+        filesJavaSwitchText.textContent = 'Archivos Java MTF habilitado'
+        JavaType = 'mtf';
+        console.log(JavaType);
     }
 })

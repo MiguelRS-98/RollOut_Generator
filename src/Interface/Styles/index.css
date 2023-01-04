@@ -24,7 +24,14 @@
     min-height: 90vh;
   }
 
-  body,
+  body {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
   main,
   #filesArea1,
   #filesArea2,
