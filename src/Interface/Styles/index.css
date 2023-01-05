@@ -20,11 +20,9 @@
 
   body {
     margin: 0;
-    width: 800px;
+    width: 900px;
+    max-width: 900px;
     min-height: 90vh;
-  }
-
-  body {
     display: flex;
     text-align: center;
     flex-direction: column;
@@ -45,7 +43,8 @@
   }
 
   main {
-    flex-direction: column;
+    width: 90%;
+    height: 90%;
   }
 
   header {
@@ -65,8 +64,9 @@
   #filesArea2,
   #filesArea3 {
     padding: 45px;
-    width: 500px;
-    height: 200px;
+    width: 100%;
+    min-height: 200px;
+    max-height: 900px;
     border-radius: var(--borderRadius-general);
   }
 
@@ -74,11 +74,15 @@
     display: flex;
     text-align: center;
     align-items: center;
-    margin: 45px;
-    height: 40px;
-    width: 100%;
-    border: solid 2px #000000;
+    justify-content: center;
+    height: 50px;
+    width: 100px;
+    border: 3px solid var(--border);
+    color: var(--textWhite);
+    font-size: large;
+    animation: all 1s ease;
     margin: 0;
+    border-radius: var(--borderRadius-general);
   }
 
   #filesJavaSwitchText {

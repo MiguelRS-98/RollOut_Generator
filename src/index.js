@@ -12,7 +12,7 @@ const { FilesDirectory, PoliciesDirectory } = require('./Resources/XMLDataDefaul
 
 // Call Classes Preset JS Files
 const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset, __init__ } = new Startup();
-const { registerShortcut } = new GlobalShortcuts();
+const { registerShortcuts, unregisterShortcuts } = new GlobalShortcuts();
 const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
 const { TransformXMLToJSON, SendFileToRollOutLocation, FoldersContentValidate, SendFileToRollOutLocationJava } = new FilesTratment();
@@ -22,7 +22,13 @@ const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
 __init__(FilesDirectory, PoliciesDirectory);
 
 // Definitions
-let Settings, FileRouter, FilePolicies, XMLRouter, XMLPolicies;
+let Settings,
+  FileRouter,
+  FilePolicies,
+  XMLRouter,
+  XMLPolicies,
+  CreateDirRouter,
+  CreateDirPolicies;
 
 /**
  * UserSettings --> Data from this JSON file
@@ -45,12 +51,12 @@ const createWindow = () => {
   // Create the Main Window.
   const mainWindow = new BrowserWindow({
     icon: join(__dirname, "Resources/NetLogistiK.jpeg"),
-    minWidth: 800,
+    minWidth: 1000,
     minHeight: 600,
-    width: 800,
+    width: 1000,
     height: 600,
     center: true,
-    resizable: true,
+    resizable: false,
     closable: true,
     webPreferences: {
       devTools: true,
@@ -124,18 +130,23 @@ const createWindow = () => {
 
 // When de app is ready, execute the the window
 app.on('ready', () => {
-  registerShortcut('CommandOrControl+R');
+  registerShortcuts('CommandOrControl+R');
   createWindow();
 });
 
-// Check the windows count in the app
-app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow() });
+// When the app is focused or not focused
+app.on('browser-window-focus', (event, window) => {
+  window.on('focus', () => {
+    registerShortcuts('CommandOrControl+R');
+  });
+  window.on('blur', () => {
+    unregisterShortcuts();
+  });
+})
+
 
 // Listen Events From Client Side
-ipcMain.on(
-  'viewLocalFiles',
-  () => ViewLocals()
-);
+ipcMain.on('viewLocalFiles', () => ViewLocals());
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on(
   'UpdateRouteSystem',
@@ -148,71 +159,62 @@ ipcMain.on(
       directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
     })
     restartApplication();
-  }
-);
+  });
 // -------------------------------------------------- // -------------------------------------------------- //
-ipcMain.on(
-  'RestoreSettingFile',
-  () => {
-    UserSettingsFileDelete();
-    restartApplication();
-  }
-);
+ipcMain.on('RestoreSettingFile', () => {
+  UserSettingsFileDelete();
+  restartApplication();
+});
 // -------------------------------------------------- // -------------------------------------------------- //
-ipcMain.on(
-  'SetXMLConfigFiles',
-  () => {
-    UserSettingsFileGenerator({
-      status: true,
-      XMLConfig: false,
-      directoryPackage: require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json')).directoryPackage,
-      directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Router.xml'),
-      directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
-    })
-    restartApplication();
-  }
-);
+ipcMain.on('SetXMLConfigFiles', () => {
+  UserSettingsFileGenerator({
+    status: true,
+    XMLConfig: false,
+    directoryPackage: require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json')).directoryPackage,
+    directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Router.xml'),
+    directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
+  })
+  restartApplication();
+});
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('ResetConfig', () => {
   UserSettingsFileReset();
 })
 // -------------------------------------------------- // -------------------------------------------------- //
-ipcMain.on(
-  'SendXMLFiles',
-  (event, { Path, Type }) => {
-    LoadXMLSettings(Path, Type);
-  }
-);
+ipcMain.on('SendXMLFiles', (event, { Path, Type }) => {
+  LoadXMLSettings(Path, Type);
+});
 // -------------------------------------------------- // -------------------------------------------------- //
-ipcMain.on(
-  'UploadFiles',
-  (event, JsonData) => {
-    // Conditional Event To Check The Router CUSTOM Or DEFAULT
-    XMLRouter = TransformXMLToJSON(Settings.setDirectoryRoutes);
-    let CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
-    XMLPolicies = TransformXMLToJSON(Settings.setDirectoryPolicies);
-    let CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
-    FileRouter = TreatmentFilesRoutes(CreateDirRouter);
-    FilePolicies = TreatmentFilesRoutes(CreateDirPolicies);
-    if (JsonData.fileName.includes('.csv')) {
-      SendFileToRollOutLocation(FilePolicies, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
-    } else if (JsonData.fileName.includes('.java') || JsonData.fileName.includes('.properties')) {
-      SendFileToRollOutLocationJava(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage, JsonData.Java);
-    } else {
-      SendFileToRollOutLocation(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
-    }
+ipcMain.on('UploadFiles', (event, JsonData) => {
+  // Conditional Event To Check The Router CUSTOM Or DEFAULT
+  // Variables
+  XMLRouter = TransformXMLToJSON(Settings.setDirectoryRoutes);
+  CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
+  // Variables
+  XMLPolicies = TransformXMLToJSON(Settings.setDirectoryPolicies);
+  CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
+  // Variables
+  FileRouter = TreatmentFilesRoutes(CreateDirRouter);
+  FilePolicies = TreatmentFilesRoutes(CreateDirPolicies);
+  // Condition
+  if (JsonData.fileName.includes('.csv')) {
+    // Execution
+    SendFileToRollOutLocation(FilePolicies, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
+  } else if (JsonData.fileName.includes('.java') || JsonData.fileName.includes('.properties')) {
+    // Execution
+    SendFileToRollOutLocationJava(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage, JsonData.Java);
+  } else {
+    // Execution
+    SendFileToRollOutLocation(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
   }
-);
+});
 // -------------------------------------------------- // -------------------------------------------------- //
-ipcMain.on(
-  'RemoveDirectories',
-  () => {
-    for (let i = 0; i < 10; i++) {
-      FoldersContentValidate(FilePolicies, Settings.setDirectoryPackage);
-      FoldersContentValidate(FileRouter, Settings.setDirectoryPackage);
-    }
+ipcMain.on('RemoveDirectories', () => {
+  for (let index = 0; index < 5; index++) {
+    FoldersContentValidate(CreateDirPolicies, Settings.setDirectoryPackage);
+    FoldersContentValidate(CreateDirRouter, Settings.setDirectoryPackage);
   }
-);
+});
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('Restart', () => {
   UserSettingsFileGenerator({
