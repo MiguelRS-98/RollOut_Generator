@@ -1,5 +1,5 @@
 // Node Modules
-const { app, BrowserWindow, ipcMain, autoUpdater } = require('electron');
+const { app, BrowserWindow, ipcMain, autoUpdater, dialog } = require('electron');
 const { homedir } = require('os');
 const { join } = require('node:path');
 
@@ -129,7 +129,23 @@ app.on('ready', () => {
   registerShortcuts('CommandOrControl+R');
   createWindow();
 });
+// Automatic Update
 require('update-electron-app')();
+autoUpdater.on('update-downloaded', () => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail:
+      'A new version has been downloaded. Restart the application to apply the updates.',
+  }
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  })
+})
+
 // When the app is focused or not focused
 app.on('browser-window-focus', (event, window) => {
   window.on('focus', () => {

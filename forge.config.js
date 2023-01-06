@@ -32,7 +32,7 @@ module.exports = {
           name: 'Move_Files',
         },
         prerelease: false,
-        draft: true,
+        draft: false,
       },
     },
   ],
