@@ -1,15 +1,9 @@
 // Node Modules
-const { autoUpdater, app, dialog } = require('electron');
+const { autoUpdater, dialog } = require('electron');
 
 class AutoUpdaterApp {
-    constructor() {
-        //Definitions
-        this.urlServerUpdater = 'https://update.electronjs.org';
-        this.urlUpdater = `${this.urlServerUpdater}/PintoGamer64/Move_Files/${process.platform}-${process.arch}/${app.getVersion()}`
-        // set URL to updates
-        autoUpdater.setFeedURL({ url: this.urlUpdater })
-    }
     DialogUpdateConfirmation() {
+        console.log('actualizando');
         const dialogOpts = {
             type: 'info',
             buttons: ['Restart', 'Later'],

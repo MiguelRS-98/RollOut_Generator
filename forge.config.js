@@ -1,3 +1,6 @@
+// Env Variables
+require('dotenv').config();
+
 module.exports = {
   packagerConfig: {},
   rebuildConfig: {},
@@ -17,6 +20,20 @@ module.exports = {
     {
       name: '@electron-forge/maker-rpm',
       config: {},
+    },
+  ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        authToken: process.env.GITHUB_TOKEN,
+        repository: {
+          owner: 'PintoGamer64',
+          name: 'Move_Files',
+        },
+        prerelease: false,
+        draft: true,
+      },
     },
   ],
 };

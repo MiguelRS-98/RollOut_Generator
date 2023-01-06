@@ -1,11 +1,11 @@
 // Node Modules
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, autoUpdater } = require('electron');
 const { homedir } = require('os');
 const { join } = require('node:path');
 
 // Local Modules
 const { Startup } = require('./Startup');
-const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, UploadFiles, AutoUpdaterApp } = require('./Scripts/ExportScripts');
+const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, UploadFiles } = require('./Scripts/ExportScripts');
 
 //Imports
 const { FilesDirectory, PoliciesDirectory } = require('./Resources/XMLDataDefault.json');
@@ -17,7 +17,6 @@ const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
 const { TransformXMLToJSON, SendFileToRollOutLocation, FoldersContentValidate, SendFileToRollOutLocationJava } = new FilesTratment();
 const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
-const { DialogUpdateConfirmation } = new AutoUpdaterApp();
 
 // Procces Start
 __init__(FilesDirectory, PoliciesDirectory);
@@ -130,10 +129,7 @@ app.on('ready', () => {
   registerShortcuts('CommandOrControl+R');
   createWindow();
 });
-// Check Updates for 1 minute
-setTimeout(() => {
-  DialogUpdateConfirmation()
-}, 60000);
+require('update-electron-app')();
 // When the app is focused or not focused
 app.on('browser-window-focus', (event, window) => {
   window.on('focus', () => {

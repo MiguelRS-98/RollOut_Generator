@@ -1,7 +1,7 @@
 {
   "name": "movefiles",
   "productName": "Mover Archivos",
-  "version": "1.5.0",
+  "version": "1.8.5",
   "description": "Generador de carpetas y archivos para RollOuts",
   "main": "src/index.js",
   "type": "commonjs",
@@ -34,6 +34,7 @@
   "icon": "https://media.licdn.com/dms/image/C4E0BAQEi8fkR9gZFjw/company-logo_200_200/0/1635287373325?e=2147483647&v=beta&t=iJ548Bb9hRCX1uqg7KnyyptKwCcxoLRIq5BocYpw2J8",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "electron-squirrel-startup": "^1.0.0",
     "update-electron-app": "^2.0.1",
     "xml-js": "^1.6.11"
@@ -44,6 +45,7 @@
     "@electron-forge/maker-rpm": "^6.0.4",
     "@electron-forge/maker-squirrel": "^6.0.4",
     "@electron-forge/maker-zip": "^6.0.4",
+    "@electron-forge/publisher-github": "^6.0.4",
     "electron": "22.0.0",
     "electron-builder": "^23.6.0"
   }
