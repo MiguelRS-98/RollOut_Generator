@@ -5,7 +5,7 @@ const { join } = require('node:path');
 
 // Local Modules
 const { Startup } = require('./Startup');
-const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, UploadFiles } = require('./Scripts/ExportScripts');
+const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, UploadFiles, AutoUpdaterApp } = require('./Scripts/ExportScripts');
 
 //Imports
 const { FilesDirectory, PoliciesDirectory } = require('./Resources/XMLDataDefault.json');
@@ -17,6 +17,7 @@ const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
 const { TransformXMLToJSON, SendFileToRollOutLocation, FoldersContentValidate, SendFileToRollOutLocationJava } = new FilesTratment();
 const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
+const { DialogUpdateConfirmation } = new AutoUpdaterApp();
 
 // Procces Start
 __init__(FilesDirectory, PoliciesDirectory);
@@ -41,11 +42,10 @@ try {
     setDirectoryRoutes: directoryRoutes,
     setStatus: status,
     setXMLConfig: XMLConfig
-  }
+  };
 } catch (err) {
   restartApplication();
-}
-
+};
 //Main Process
 const createWindow = () => {
   // Create the Main Window.
@@ -64,10 +64,9 @@ const createWindow = () => {
       preload: join(__dirname, 'Preloads/preload.js'),
     }
   });
-  //mainWindow.setMenu(null);
+  mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/index.html'));
-
   try {
     if (Settings.setXMLConfig === false) {
       const config = new BrowserWindow({
@@ -94,8 +93,7 @@ const createWindow = () => {
     }
   } catch (err) {
     console.log('Throw JavaScript Node Exception To Create Settings Directory');
-  }
-
+  };
   try {
     // Check the user config in settings JSON file
     if (!Settings.setStatus) {
@@ -125,15 +123,17 @@ const createWindow = () => {
     }
   } catch (err) {
     console.log('Throw JavaScript Node Exception To Create Settings Directory');
-  }
+  };
 };
-
 // When de app is ready, execute the the window
 app.on('ready', () => {
   registerShortcuts('CommandOrControl+R');
   createWindow();
 });
-
+// Check Updates for 1 minute
+setTimeout(() => {
+  DialogUpdateConfirmation()
+}, 60000);
 // When the app is focused or not focused
 app.on('browser-window-focus', (event, window) => {
   window.on('focus', () => {
@@ -142,9 +142,7 @@ app.on('browser-window-focus', (event, window) => {
   window.on('blur', () => {
     unregisterShortcuts();
   });
-})
-
-
+});
 // Listen Events From Client Side
 ipcMain.on('viewLocalFiles', () => ViewLocals());
 // -------------------------------------------------- // -------------------------------------------------- //
