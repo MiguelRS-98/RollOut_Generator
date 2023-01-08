@@ -29,6 +29,7 @@ contextBridge.exposeInMainWorld(
         ViewLocals,
         RestoreSettings,
         SetXMLConfigFiles,
-        getFiles
+        getFiles,
+        removeEmptyDirectories
     }
 )

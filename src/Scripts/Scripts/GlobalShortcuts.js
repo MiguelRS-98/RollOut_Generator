@@ -1,12 +1,15 @@
 const { globalShortcut, app } = require("electron");
 
 class GlobalShortcuts {
-    registerShortcut(textShortcut){
+    registerShortcuts(textShortcut){
         globalShortcut.register(textShortcut, (err) => {
             if (err) return console.log(err);
             app.quit();
             app.relaunch();
         });
+    };
+    unregisterShortcuts(){
+        globalShortcut.unregisterAll();
     }
 }
 

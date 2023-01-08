@@ -3,6 +3,7 @@ const filesSettingsButton1 = document.getElementById('filesSettingsButton1');
 const filesSettingsButton2 = document.getElementById('filesSettingsButton2');
 const filesSettingsButton3 = document.getElementById('filesSettingsButton3');
 const filesSettingsButton4 = document.getElementById('filesSettingsButton4');
+const filesJavaSwitch = document.getElementById('filesJavaSwitch');
 
 //Dependencies
 let State_MTF = 'class';
@@ -46,7 +47,7 @@ function retrieveFiles(files) {
     for (let file of files) {
         processFiles(file)
     }
-
+    window.main.removeEmptyDirectories();
 }
 
 function processFiles(file) {

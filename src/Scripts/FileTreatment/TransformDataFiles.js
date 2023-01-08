@@ -1,5 +1,5 @@
 // Node Modules
-const { readFileSync, copyFile } = require('node:fs');
+const { readFileSync, copyFile, readdirSync, rmdir, existsSync } = require('node:fs');
 const { join } = require('node:path');
 const { xml2json } = require('xml-js');
 
@@ -9,12 +9,12 @@ class FilesTratment {
         return result;
     }
     fixRoute(route) {
-        let newData;
-        let newVariable = route.split("\\")
+        let newData,
+            newVariable = route.split("\\");
         for (let i = 0; i < newVariable.length; i++) {
             newData += `/${newVariable[i]}`
-        }
-        return newData.split('undefined/')[1]
+        };
+        return newData.split('undefined/')[1];
     };
     SendFilesAlgorithm(element, filePath, Name, directoryPackage, javaTypeTreatment = 'class') {
         let Destination = this.fixRoute(element.routes);
@@ -48,8 +48,34 @@ class FilesTratment {
                 new FilesTratment().SendFilesAlgorithm(routerElement, filePath, Name, directoryPackage);
             };
         });
-    }
-}
+    };
+    SendFileToRollOutLocationJava(Data, filePath, Name, directoryPackage, Java = 'class') {
+        console.log(Java);
+        if (Java === 'class') {
+            Data.map(element => {
+                if (element.type === 'java') {
+                    let Destination = new FilesTratment().fixRoute(element.routes),
+                        PathFile = new FilesTratment().fixRoute(filePath);
+                    if (Name.includes(element.type)) {
+                        copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
+                            err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
+                        })
+                    };
+                };
+            });
+        } else {
+            Data.map(element => {
+                if (element.type === 'mtf') {
+                    let Destination = new FilesTratment().fixRoute(element.routes),
+                        PathFile = new FilesTratment().fixRoute(filePath);
+                    copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
+                        err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
+                    });
+                };
+            });
+        };
+    };
+};
 
 module.exports = {
     FilesTratment

@@ -1,5 +1,5 @@
 // Node Modules
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, autoUpdater, dialog } = require('electron');
 const { homedir } = require('os');
 const { join } = require('node:path');
 
@@ -12,7 +12,7 @@ const { FilesDirectory, PoliciesDirectory } = require('./Resources/XMLDataDefaul
 
 // Call Classes Preset JS Files
 const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset, __init__ } = new Startup();
-const { registerShortcut } = new GlobalShortcuts();
+const { registerShortcuts, unregisterShortcuts } = new GlobalShortcuts();
 const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
 const { TransformXMLToJSON, SendFileToRollOutLocation } = new FilesTratment();
@@ -21,7 +21,14 @@ const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
 // Procces Start
 __init__(FilesDirectory, PoliciesDirectory);
 
-let Settings;
+// Definitions
+let Settings,
+  FileRouter,
+  FilePolicies,
+  XMLRouter,
+  XMLPolicies,
+  CreateDirRouter,
+  CreateDirPolicies;
 
 /**
  * UserSettings --> Data from this JSON file
@@ -34,11 +41,10 @@ try {
     setDirectoryRoutes: directoryRoutes,
     setStatus: status,
     setXMLConfig: XMLConfig
-  }
+  };
 } catch (err) {
   restartApplication();
-}
-
+};
 //Main Process
 const createWindow = () => {
   // Create the Main Window.
@@ -49,7 +55,7 @@ const createWindow = () => {
     width: 1000,
     height: 650,
     center: true,
-    resizable: true,
+    resizable: false,
     closable: true,
     webPreferences: {
       devTools: true,
@@ -60,7 +66,6 @@ const createWindow = () => {
   // mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/index.html'));
-
   try {
     if (Settings.setXMLConfig === false) {
       const config = new BrowserWindow({
@@ -87,8 +92,7 @@ const createWindow = () => {
     }
   } catch (err) {
     console.log('Throw JavaScript Node Exception To Create Settings Directory');
-  }
-
+  };
   try {
     // Check the user config in settings JSON file
     if (!Settings.setStatus) {
@@ -118,23 +122,41 @@ const createWindow = () => {
     }
   } catch (err) {
     console.log('Throw JavaScript Node Exception To Create Settings Directory');
-  }
+  };
 };
-
 // When de app is ready, execute the the window
 app.on('ready', () => {
-  registerShortcut('CommandOrControl+R');
+  registerShortcuts('CommandOrControl+R');
   createWindow();
 });
+// Automatic Update
+require('update-electron-app')();
+autoUpdater.on('update-downloaded', () => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail:
+      'A new version has been downloaded. Restart the application to apply the updates.',
+  }
 
-// Check the windows count in the app
-app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow() });
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  })
+})
 
+// When the app is focused or not focused
+app.on('browser-window-focus', (event, window) => {
+  window.on('focus', () => {
+    registerShortcuts('CommandOrControl+R');
+  });
+  window.on('blur', () => {
+    unregisterShortcuts();
+  });
+});
 // Listen Events From Client Side
-ipcMain.on(
-  'viewLocalFiles',
-  () => ViewLocals()
-);
+ipcMain.on('viewLocalFiles', () => ViewLocals());
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on(
   'UpdateRouteSystem',
@@ -147,41 +169,31 @@ ipcMain.on(
       directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
     })
     restartApplication();
-  }
-);
+  });
 // -------------------------------------------------- // -------------------------------------------------- //
-ipcMain.on(
-  'RestoreSettingFile',
-  () => {
-    UserSettingsFileDelete();
-    restartApplication();
-  }
-);
+ipcMain.on('RestoreSettingFile', () => {
+  UserSettingsFileDelete();
+  restartApplication();
+});
 // -------------------------------------------------- // -------------------------------------------------- //
-ipcMain.on(
-  'SetXMLConfigFiles',
-  () => {
-    UserSettingsFileGenerator({
-      status: true,
-      XMLConfig: false,
-      directoryPackage: require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json')).directoryPackage,
-      directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Router.xml'),
-      directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
-    })
-    restartApplication();
-  }
-);
+ipcMain.on('SetXMLConfigFiles', () => {
+  UserSettingsFileGenerator({
+    status: true,
+    XMLConfig: false,
+    directoryPackage: require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json')).directoryPackage,
+    directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Router.xml'),
+    directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
+  })
+  restartApplication();
+});
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('ResetConfig', () => {
   UserSettingsFileReset();
 })
 // -------------------------------------------------- // -------------------------------------------------- //
-ipcMain.on(
-  'SendXMLFiles',
-  (event, { Path, Type }) => {
-    LoadXMLSettings(Path, Type);
-  }
-);
+ipcMain.on('SendXMLFiles', (event, { Path, Type }) => {
+  LoadXMLSettings(Path, Type);
+});
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on(
   'UploadFiles',
@@ -202,7 +214,7 @@ ipcMain.on(
     }
   }
 );
-
+// -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('Restart', () => {
   UserSettingsFileGenerator({
     status: true,
