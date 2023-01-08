@@ -15,7 +15,7 @@ const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset
 const { registerShortcut } = new GlobalShortcuts();
 const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
-const { TransformXMLToJSON, SendFileToRollOutLocationRouter, SendFileToRollOutLocationPolicies } = new FilesTratment();
+const { TransformXMLToJSON, SendFileToRollOutLocation } = new FilesTratment();
 const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
 
 // Procces Start
@@ -44,10 +44,10 @@ const createWindow = () => {
   // Create the Main Window.
   const mainWindow = new BrowserWindow({
     icon: join(__dirname, "Resources/NetLogistiK.jpeg"),
-    minWidth: 800,
-    minHeight: 525,
-    width: 800,
-    height: 525,
+    minWidth: 1000,
+    minHeight: 650,
+    width: 1000,
+    height: 650,
     center: true,
     resizable: true,
     closable: true,
@@ -57,7 +57,7 @@ const createWindow = () => {
       preload: join(__dirname, 'Preloads/preload.js'),
     }
   });
-  mainWindow.setMenu(null);
+  // mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/index.html'));
 
@@ -194,11 +194,11 @@ ipcMain.on(
     XMLPolicies = TransformXMLToJSON(Settings.setDirectoryPolicies);
     let CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
     if (JsonData.fileName.includes('.csv')) {
-      let FileRouter = TreatmentFilesRoutes(CreateDirPolicies);
-      SendFileToRollOutLocationRouter(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
+      let FilePolicies = TreatmentFilesRoutes(CreateDirPolicies);
+      SendFileToRollOutLocation(FilePolicies, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage, JsonData.Java);
     } else {
-      let FilePolicies = TreatmentFilesRoutes(CreateDirRouter);
-      SendFileToRollOutLocationPolicies(FilePolicies, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage);
+      let FileRouter = TreatmentFilesRoutes(CreateDirRouter);
+      SendFileToRollOutLocation(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage, JsonData.Java);
     }
   }
 );

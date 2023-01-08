@@ -10,6 +10,7 @@
     --Pass: #00ff0080;
     --gray: #00000030;
     --Exit: #ff0000;
+    --Check: #00ff00;
   }
 
   html {
@@ -20,7 +21,7 @@
 
   body {
     margin: 0;
-    width: 800px;
+    width: 100%;
     min-height: 90vh;
   }
 
@@ -38,11 +39,12 @@
   }
 
   main {
+    width: 95%;
     flex-direction: row;
   }
 
   header {
-    width: 100%;
+    width: 95%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -54,7 +56,13 @@
     border-radius: 5px;
   }
 
-  #filesArea1,
+  #filesArea1 {
+    padding: 15px;
+    width: 100%;
+    height: 300px;
+    border-radius: var(--borderRadius-general);
+  }
+
   #filesArea2,
   #filesArea3 {
     padding: 15px;
@@ -69,7 +77,17 @@
     width: 230px;
     height: 50px;
     border: 3px solid var(--border);
-    background: var(--backgroundInputs);
+    background-color: var(--backgroundInputs);
+    color: var(--textWhite);
+    font-size: large;
+    border-radius: var(--borderRadius-general);
+    animation: all 1s ease;
+  }
+
+  #filesSettingsButton4 {
+    width: 100px;
+    height: 50px;
+    border: 3px solid var(--border);
     color: var(--textWhite);
     font-size: large;
     border-radius: var(--borderRadius-general);
@@ -77,8 +95,9 @@
   }
 
   #filesSettingsButton2:hover,
-  #filesSettingsButton3:hover {
-    background: var(--textWhite);
+  #filesSettingsButton3:hover,
+  #filesSettingsButton4:hover {
+    background-color: var(--textWhite);
     color: var(--backgroundInputs);
     font-size: large;
     border-radius: var(--borderRadius-general);
@@ -86,7 +105,7 @@
   }
 
   #filesSettingsButton1:hover {
-    background: var(--Exit);
+    background-color: var(--Exit);
     color: var(--outBorder);
     font-size: large;
     border-radius: var(--borderRadius-general);
@@ -99,13 +118,23 @@
 
   .active {
     border: dashed 5px var(--outBorder);
-    background: var(--lowBackground);
+    background-color: var(--lowBackground);
   }
 
   .checkwrong {
-    background: var(--Wrong);
+    background-color: var(--Wrong);
   }
 
   .checkpass {
-    background: var(--Pass);
+    background-color: var(--Pass);
+  }
+
+  .MTFDesactive {
+    color: var(--textWhite);
+    background-color: var(--Exit);
+  }
+
+  .MTFActive {
+    color: var(--textBlack);
+    background-color: var(--Check);
   }
