@@ -63,7 +63,8 @@ const createWindow = () => {
       preload: join(__dirname, 'Preloads/preload.js'),
     }
   });
-  // mainWindow.setMenu(null);
+  mainWindow.setMaxListeners(20);
+  mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/index.html'));
   try {
@@ -87,6 +88,7 @@ const createWindow = () => {
           preload: join(__dirname, 'Preloads/PreloadXML.js')
         }
       })
+      config.setMaxListeners(20);
       config.setMenu(null);
       config.loadFile(join(__dirname, 'Interface/Views/WindowXML.html'));
     }
@@ -117,6 +119,7 @@ const createWindow = () => {
           preload: join(__dirname, 'Preloads/preloadRoute.js')
         }
       });
+      child.setMaxListeners(20);
       child.setMenu(null);
       child.loadFile(join(__dirname, '/Interface/Views/WindowSettings.html'));
     }
@@ -124,6 +127,8 @@ const createWindow = () => {
     console.log('Throw JavaScript Node Exception To Create Settings Directory');
   };
 };
+// Disable Hardware Accelaration
+app.disableHardwareAcceleration();
 // When de app is ready, execute the the window
 app.on('ready', () => {
   registerShortcuts('CommandOrControl+R');

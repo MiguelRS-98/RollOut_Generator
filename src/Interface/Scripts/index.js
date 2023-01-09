@@ -47,7 +47,6 @@ function retrieveFiles(files) {
     for (let file of files) {
         processFiles(file)
     }
-    window.main.removeEmptyDirectories();
 }
 
 function processFiles(file) {
