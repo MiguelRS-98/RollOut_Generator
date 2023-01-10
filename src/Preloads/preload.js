@@ -9,10 +9,10 @@ function ViewLocals() {
     ipcRenderer.send('viewLocalFiles');
 };
 function RestoreSettings() {
-    ipcRenderer.send('RestoreSettingFile')
+    ipcRenderer.send('RestoreSettingFile');
 };
 function SetXMLConfigFiles() {
-    ipcRenderer.send('SetXMLConfigFiles')
+    ipcRenderer.send('SetXMLConfigFiles');
 };
 function getFiles(Name, Path, JavaTreatment) {
     const jsonData = {
@@ -20,7 +20,10 @@ function getFiles(Name, Path, JavaTreatment) {
         fileLocation: Path,
         Java: JavaTreatment
     };
-    ipcRenderer.send('UploadFiles', jsonData)
+    ipcRenderer.send('UploadFiles', jsonData);
+}
+function deleteDirectories() {
+    ipcRenderer.send('DeleteDirectories');
 }
 
 contextBridge.exposeInMainWorld(
@@ -29,6 +32,7 @@ contextBridge.exposeInMainWorld(
         ViewLocals,
         RestoreSettings,
         SetXMLConfigFiles,
-        getFiles
+        getFiles,
+        deleteDirectories
     }
-)
+);

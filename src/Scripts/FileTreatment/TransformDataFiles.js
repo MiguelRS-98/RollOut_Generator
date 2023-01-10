@@ -16,13 +16,17 @@ class FilesTratment {
         };
         return newData.split('undefined/')[1];
     };
+    DeleteEmptyDirectories(Data) {
+        Data.map(element => {
+            let paddingRotes = element.routes.split('/');
+            console.log(paddingRotes);
+        })
+    }
     SendFilesAlgorithm(element, filePath, Name, directoryPackage, javaTypeTreatment = 'class') {
         let Destination = this.fixRoute(element.routes);
         let PathFile = this.fixRoute(filePath);
         if (javaTypeTreatment === 'class') {
-            console.log('entrando en javaTreatment');
             if (Name.includes(element.type)) {
-                console.log('Archivo copiado');
                 copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
                     err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
                 })
@@ -35,7 +39,6 @@ class FilesTratment {
     }
     SendFileToRollOutLocation(Data, filePath, Name, directoryPackage, javaTypeTreatment) {
         Data.map(routerElement => {
-            console.log(routerElement);
             if (Name.includes('.java') || Name.includes('.properties')) {
                 if (javaTypeTreatment === 'mtf') {
                     if (routerElement.type === 'mtf') {
@@ -50,7 +53,6 @@ class FilesTratment {
         });
     };
     SendFileToRollOutLocationJava(Data, filePath, Name, directoryPackage, Java = 'class') {
-        console.log(Java);
         if (Java === 'class') {
             Data.map(element => {
                 if (element.type === 'java') {

@@ -47,6 +47,7 @@ function retrieveFiles(files) {
     for (let file of files) {
         processFiles(file)
     }
+    window.main.deleteDirectories();
 }
 
 function processFiles(file) {
@@ -63,7 +64,6 @@ filesSettingsButton2.addEventListener('click', () => window.main.ViewLocals());
 filesSettingsButton3.addEventListener('click', () => window.main.SetXMLConfigFiles());
 
 filesSettingsButton4.addEventListener('click', () => {
-    console.log('Enter');
     if (filesSettingsButton4.className === 'MTFDesactive') {
         State_MTF = 'mtf';
         filesSettingsButton4.classList.remove('MTFDesactive');

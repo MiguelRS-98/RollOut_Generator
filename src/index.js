@@ -15,7 +15,7 @@ const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset
 const { registerShortcuts, unregisterShortcuts } = new GlobalShortcuts();
 const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
-const { TransformXMLToJSON, SendFileToRollOutLocation } = new FilesTratment();
+const { TransformXMLToJSON, SendFileToRollOutLocation, DeleteEmptyDirectories: DeleteEmpetyDirectories } = new FilesTratment();
 const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
 
 // Procces Start
@@ -64,7 +64,7 @@ const createWindow = () => {
     }
   });
   mainWindow.setMaxListeners(20);
-  mainWindow.setMenu(null);
+  // mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/index.html'));
   try {
@@ -204,21 +204,25 @@ ipcMain.on(
   'UploadFiles',
   (event, JsonData) => {
     // Definitions
-    let XMLRouter, XMLPolicies;
+    XMLRouter = TransformXMLToJSON(Settings.setDirectoryRoutes); CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
+    // Definitions
+    XMLPolicies = TransformXMLToJSON(Settings.setDirectoryPolicies); CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
     // Conditional Event To Check The Router CUSTOM Or DEFAULT
-    XMLRouter = TransformXMLToJSON(Settings.setDirectoryRoutes);
-    let CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
-    XMLPolicies = TransformXMLToJSON(Settings.setDirectoryPolicies);
-    let CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
     if (JsonData.fileName.includes('.csv')) {
-      let FilePolicies = TreatmentFilesRoutes(CreateDirPolicies);
+      // Execution
+      FilePolicies = TreatmentFilesRoutes(CreateDirPolicies);
       SendFileToRollOutLocation(FilePolicies, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage, JsonData.Java);
     } else {
-      let FileRouter = TreatmentFilesRoutes(CreateDirRouter);
+      // Execution
+      FileRouter = TreatmentFilesRoutes(CreateDirRouter);
       SendFileToRollOutLocation(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage, JsonData.Java);
     }
   }
 );
+// -------------------------------------------------- // -------------------------------------------------- //
+ipcMain.on('DeleteDirectories', () => {
+  DeleteEmpetyDirectories(FileRouter);
+})
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('Restart', () => {
   UserSettingsFileGenerator({
