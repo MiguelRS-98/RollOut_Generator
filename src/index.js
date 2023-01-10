@@ -1,5 +1,5 @@
 // Node Modules
-const { app, BrowserWindow, ipcMain, autoUpdater, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, autoUpdater, dialog, ipcRenderer } = require('electron');
 const { homedir } = require('os');
 const { join } = require('node:path');
 
@@ -49,7 +49,7 @@ try {
 const createWindow = () => {
   // Create the Main Window.
   const mainWindow = new BrowserWindow({
-    icon: join(__dirname, "Resources/NetLogistiK.jpeg"),
+    icon: join(__dirname, "Resources/MoveFiles_Icon.ico"),
     minWidth: 1000,
     minHeight: 650,
     width: 1000,
@@ -63,14 +63,38 @@ const createWindow = () => {
       preload: join(__dirname, 'Preloads/preload.js'),
     }
   });
+  // Set UserTask List
+  mainWindow.setThumbarButtons([
+    {
+      icon: join(__dirname, 'Resources/Restart.png'),
+      click: () => {
+        UserSettingsFileDelete();
+        restartApplication();
+      }
+    }, {
+      icon: join(__dirname, 'Resources/Settings.png'),
+      click: () => {
+        UserSettingsFileGenerator({
+          status: true,
+          XMLConfig: false,
+          directoryPackage: require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json')).directoryPackage,
+          directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Router.xml'),
+          directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
+        })
+        restartApplication();
+      }
+    }
+  ])
+  // Configs
+  mainWindow.setTitle('NetLogistiK - MoveFiles')
   mainWindow.setMaxListeners(20);
-  // mainWindow.setMenu(null);
+  mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/index.html'));
   try {
     if (Settings.setXMLConfig === false) {
       const config = new BrowserWindow({
-        icon: join(__dirname, "Resources/NetLogistiK.jpeg"),
+        icon: join(__dirname, "Resources/MoveFiles_Icon.ico"),
         parent: mainWindow,
         width: 800,
         height: 500,
@@ -100,7 +124,7 @@ const createWindow = () => {
     if (!Settings.setStatus) {
       // Create the Modal Window Settings Setter.
       const child = new BrowserWindow({
-        icon: join(__dirname, "Resources/NetLogistiK.jpeg"),
+        icon: join(__dirname, "Resources/MoveFiles_Icon.ico"),
         parent: mainWindow,
         width: 400,
         height: 400,

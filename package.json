@@ -31,7 +31,7 @@
   },
   "os": "win32",
   "arch": "x64",
-  "icon": "https://media.licdn.com/dms/image/C4E0BAQEi8fkR9gZFjw/company-logo_200_200/0/1635287373325?e=2147483647&v=beta&t=iJ548Bb9hRCX1uqg7KnyyptKwCcxoLRIq5BocYpw2J8",
+  "icon": "C:/movefiles_1.5/src/Resources/MoveFiles_Icon",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.0.3",

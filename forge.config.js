@@ -2,7 +2,9 @@
 require('dotenv').config();
 
 module.exports = {
-  packagerConfig: {},
+  packagerConfig: {
+    icon: 'C:/movefiles_1.5/src/Resources/MoveFiles_Icon'
+  },
   rebuildConfig: {},
   makers: [
     {
@@ -24,7 +26,7 @@ module.exports = {
   ],
   publishers: [
     {
-      name: '@electron-forge/publisher-github',
+      name: 'NetLogistiK - MoveFiles',
       config: {
         authToken: process.env.GITHUB_TOKEN,
         repository: {

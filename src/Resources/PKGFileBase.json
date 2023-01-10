@@ -1,0 +1,10 @@
+{
+    "RollOut": "#Rollout\n## This script has been built automatically using BuildJiraRollout. \n# Please check the actions taken by the script as they may not be entirely correct. \n# Also check the order of the actions taken if any dependencies might be \n# encountered",
+    "Replacing-files-affected": "# Replacing files affected",
+    "Removing-files-removed-by-extension": "# Removing files removed by extension",
+    "Run-any-SQL,-MSQL,-and-other-scripts": "# Run any SQL, MSQL, and other scripts",
+    "Import-any-Integrator-data-affected": "# Import any Integrator data affected",
+    "Rebuilding-C-makefiles-if-necessary": "# Rebuilding C makefiles if necessary",
+    "Perform-any-environment-rebuilds-if-necessary": "# Perform any environment rebuilds if necessary\nMBUILD",
+    "End-of-the-Script": "# End of the Script"
+}
