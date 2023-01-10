@@ -1,7 +1,7 @@
 {
   "name": "movefiles",
   "productName": "NetLogistiK - Mover Archivos",
-  "version": "1.9.2",
+  "version": "1.9.5",
   "description": "Generador de carpetas y archivos para RollOuts",
   "main": "src/index.js",
   "type": "commonjs",

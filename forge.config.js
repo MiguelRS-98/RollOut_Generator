@@ -26,7 +26,7 @@ module.exports = {
   ],
   publishers: [
     {
-      name: 'NetLogistiK - MoveFiles',
+      name: '@electron-forge/publisher-github',
       config: {
         authToken: process.env.GITHUB_TOKEN,
         repository: {
