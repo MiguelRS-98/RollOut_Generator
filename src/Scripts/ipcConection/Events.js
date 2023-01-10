@@ -1,19 +1,25 @@
 // Node Modules2
 const { exec } = require('node:child_process');
+const { error } = require('node:console');
 const { copyFile, writeFileSync } = require('node:fs');
 const { homedir } = require('node:os');
 const { join } = require('node:path');
+const { throwError } = require('rxjs');
 
 class EventsProcess {
     constructor(ipcNameParam) {
         this.ipcMain_Name = ipcNameParam
     }
     ViewLocals() {
-        exec('explorer .', err => {
-            if (err) {
-                console.log(err);
-            }
-        })
+        try {
+            exec(`explorer.exe ${join(homedir(), 'AppData/Roaming/.UserSettings')}`)(err => {
+                if (err) {
+                    console.log(err);
+                }
+            })
+        } catch (err) {
+            console.log(err); 
+        }
     }
     LoadXMLSettings(XMLPathFile, typeFile) {
         const ActualSettings = require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json'))

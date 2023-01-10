@@ -2,7 +2,7 @@
 const { mkdirSync, existsSync } = require('node:fs');
 const { join } = require('node:path');
 
-class UploadFiles {
+class FilesValidator {
     CreateDirectorysFiles(JSONArray, RollOutPath) {
         let routerIterator = "";
         JSONArray.map(dataRoute => {
@@ -32,7 +32,7 @@ class UploadFiles {
             );
             ArrayRoutesSetter = [];
         };
-        new UploadFiles().CreateDirectorysFiles(ArrayDataSetter, RollOutPath);
+        new FilesValidator().CreateDirectorysFiles(ArrayDataSetter, RollOutPath);
         return ArrayDataSetter;
     }
     TreatmentFilesRoutes(ArrayDataTypes) {
@@ -49,5 +49,5 @@ class UploadFiles {
 }
 
 module.exports = {
-    UploadFiles
+    FilesValidator
 }

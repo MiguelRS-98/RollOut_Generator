@@ -16,43 +16,54 @@ class FilesTratment {
         };
         return newData.split('undefined/')[1];
     };
-    DeleteEmptyDirectories(Data) {
-        Data.map(element => {
-            let paddingRotes = element.routes.split('/');
-            console.log(paddingRotes);
-        })
+    DeleteEmptyDirectories(Data, directoryPackage) {
+        try {
+            Data.map(element => {
+                let newStringDirectory,
+                    newArrayDirectoryContent,
+                    paddingRoutes = element.routes.split('/'),
+                    temporalPaddingRoutes = element.routes.split('/');
+                for (let prIdx = 0; prIdx < paddingRoutes.length; prIdx++) {
+                    newStringDirectory = ""
+                    for (let b = 0; b < temporalPaddingRoutes.length; b++) {
+                        if (newStringDirectory === newStringDirectory) {
+                            newStringDirectory += `/${paddingRoutes[b]}`;
+                            if (newStringDirectory.endsWith('/')) {
+                                newStringDirectory = newStringDirectory.slice(newStringDirectory.length + 1)
+                            }
+                        } else {
+                            return;
+                        }
+                    }
+                    temporalPaddingRoutes.pop();
+                    if (existsSync(join(directoryPackage, newStringDirectory)) && newStringDirectory.length !== 0) {
+                        newArrayDirectoryContent = readdirSync(join(directoryPackage, newStringDirectory), { encoding: 'utf-8' })
+                        if (newArrayDirectoryContent.length === 0) {
+                            rmdir(join(directoryPackage, newStringDirectory), (err) => {
+                                err ? console.log(err) : console.log('directory removed SUCCESFULL');
+                            })
+                        }
+                    }
+                }
+            })
+        } catch (err) {
+            return;
+        }
     }
     SendFilesAlgorithm(element, filePath, Name, directoryPackage, javaTypeTreatment = 'class') {
-        let Destination = this.fixRoute(element.routes);
-        let PathFile = this.fixRoute(filePath);
-        if (javaTypeTreatment === 'class') {
-            if (Name.includes(element.type)) {
-                copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
-                    err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
-                })
-            }
-        } else {
+        let Destination = this.fixRoute(element.routes),
+            PathFile = this.fixRoute(filePath);
+        if (Name.includes(element.type)) {
             copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
-                err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`);
+                err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
             })
         }
     }
-    SendFileToRollOutLocation(Data, filePath, Name, directoryPackage, javaTypeTreatment) {
-        Data.map(routerElement => {
-            if (Name.includes('.java') || Name.includes('.properties')) {
-                if (javaTypeTreatment === 'mtf') {
-                    if (routerElement.type === 'mtf') {
-                        new FilesTratment().SendFilesAlgorithm(routerElement, filePath, Name, directoryPackage, javaTypeTreatment);
-                    };
-                } else {
-                    new FilesTratment().SendFilesAlgorithm(routerElement, filePath, Name, directoryPackage);
-                }
-            } else {
-                new FilesTratment().SendFilesAlgorithm(routerElement, filePath, Name, directoryPackage);
-            };
-        });
+    SendFileToRollOutLocation(Data, filePath, Name, directoryPackage) {
+        new FilesTratment().SendFilesAlgorithm(routerElement, filePath, Name, directoryPackage);
     };
     SendFileToRollOutLocationJava(Data, filePath, Name, directoryPackage, Java = 'class') {
+        console.log(Java);
         if (Java === 'class') {
             Data.map(element => {
                 if (element.type === 'java') {

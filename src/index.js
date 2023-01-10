@@ -5,9 +5,9 @@ const { join } = require('node:path');
 
 // Local Modules
 const { Startup } = require('./Startup');
-const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, UploadFiles } = require('./Scripts/ExportScripts');
+const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, FilesValidator } = require('./Scripts/ExportScripts');
 
-//Imports
+//Imports<
 const { FilesDirectory, PoliciesDirectory } = require('./Resources/XMLDataDefault.json');
 
 // Call Classes Preset JS Files
@@ -15,8 +15,8 @@ const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset
 const { registerShortcuts, unregisterShortcuts } = new GlobalShortcuts();
 const { ViewLocals, LoadXMLSettings } = new EventsProcess();
 const { restartApplication } = new MainProcess();
-const { TransformXMLToJSON, SendFileToRollOutLocation, DeleteEmptyDirectories: DeleteEmpetyDirectories } = new FilesTratment();
-const { ValidateFiles, TreatmentFilesRoutes } = new UploadFiles();
+const { TransformXMLToJSON, SendFileToRollOutLocation, DeleteEmptyDirectories, SendFileToRollOutLocationJava } = new FilesTratment();
+const { ValidateFiles, TreatmentFilesRoutes } = new FilesValidator();
 
 // Procces Start
 __init__(FilesDirectory, PoliciesDirectory);
@@ -202,26 +202,33 @@ ipcMain.on('SendXMLFiles', (event, { Path, Type }) => {
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on(
   'UploadFiles',
-  (event, JsonData) => {
+  (event, { fileName, Java, fileLocation }) => {
     // Definitions
-    XMLRouter = TransformXMLToJSON(Settings.setDirectoryRoutes); CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
+    XMLRouter = TransformXMLToJSON(Settings.setDirectoryRoutes);
+    CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
+    FileRouter = TreatmentFilesRoutes(CreateDirRouter);
     // Definitions
-    XMLPolicies = TransformXMLToJSON(Settings.setDirectoryPolicies); CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
+    XMLPolicies = TransformXMLToJSON(Settings.setDirectoryPolicies);
+    CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
+    FilePolicies = TreatmentFilesRoutes(CreateDirPolicies);
     // Conditional Event To Check The Router CUSTOM Or DEFAULT
-    if (JsonData.fileName.includes('.csv')) {
+    if (fileName.includes('.csv')) {
       // Execution
-      FilePolicies = TreatmentFilesRoutes(CreateDirPolicies);
-      SendFileToRollOutLocation(FilePolicies, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage, JsonData.Java);
+      SendFileToRollOutLocation(FilePolicies, fileLocation, fileName, Settings.setDirectoryPackage);
+    } else if (fileName.includes('.java') || fileName.includes('.properties')) {
+      SendFileToRollOutLocationJava(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage, Java);
     } else {
       // Execution
-      FileRouter = TreatmentFilesRoutes(CreateDirRouter);
-      SendFileToRollOutLocation(FileRouter, JsonData.fileLocation, JsonData.fileName, Settings.setDirectoryPackage, JsonData.Java);
+      SendFileToRollOutLocation(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage);
     }
   }
 );
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('DeleteDirectories', () => {
-  DeleteEmpetyDirectories(FileRouter);
+  for (let index = 0; index < 10; index++) {
+    DeleteEmptyDirectories(FileRouter, Settings.setDirectoryPackage);
+    DeleteEmptyDirectories(FilePolicies, Settings.setDirectoryPackage);
+  }
 })
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('Restart', () => {
