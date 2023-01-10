@@ -1,10 +1,8 @@
 // Node Modules2
 const { exec } = require('node:child_process');
-const { error } = require('node:console');
 const { copyFile, writeFileSync } = require('node:fs');
 const { homedir } = require('node:os');
 const { join } = require('node:path');
-const { throwError } = require('rxjs');
 
 class EventsProcess {
     constructor(ipcNameParam) {
