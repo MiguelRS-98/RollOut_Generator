@@ -2,8 +2,9 @@
 const { readFileSync, copyFile, readdirSync, rmdir, existsSync } = require('node:fs');
 const { join } = require('node:path');
 const { xml2json } = require('xml-js');
+const { EventsProcess } = require('../ExportScripts');
 
-class FilesTratment {
+class FilesTratment extends EventsProcess{
     TransformXMLToJSON(XMLPathFile) {
         let result = xml2json(readFileSync(XMLPathFile, { encoding: 'utf-8' }), { compact: true });
         return result;
@@ -40,7 +41,7 @@ class FilesTratment {
                         newArrayDirectoryContent = readdirSync(join(directoryPackage, newStringDirectory), { encoding: 'utf-8' })
                         if (newArrayDirectoryContent.length === 0) {
                             rmdir(join(directoryPackage, newStringDirectory), (err) => {
-                                err ? console.log(err) : console.log('directory removed SUCCESFULL');
+                                if (err) return console.log(err);
                             })
                         }
                     }
@@ -50,7 +51,8 @@ class FilesTratment {
             return;
         }
     }
-    SendFilesAlgorithm(element, filePath, Name, directoryPackage, javaTypeTreatment = 'class') {
+    SendFilesAlgorithm(element, filePath, Name, directoryPackage, PKGFile) {
+        console.log(this.fixRoute(element.routes).split('pkg/')[1]);
         let Destination = this.fixRoute(element.routes),
             PathFile = this.fixRoute(filePath);
         if (Name.includes(element.type)) {
@@ -59,11 +61,12 @@ class FilesTratment {
             })
         }
     }
-    SendFileToRollOutLocation(Data, filePath, Name, directoryPackage) {
-        new FilesTratment().SendFilesAlgorithm(routerElement, filePath, Name, directoryPackage);
+    SendFileToRollOutLocation(Data, filePath, Name, directoryPackage, PKGFile) {
+        Data.map(routerElement => {
+            new FilesTratment().SendFilesAlgorithm(routerElement, filePath, Name, directoryPackage, PKGFile);
+        })
     };
-    SendFileToRollOutLocationJava(Data, filePath, Name, directoryPackage, Java = 'class') {
-        console.log(Java);
+    SendFileToRollOutLocationJava(Data, filePath, Name, directoryPackage, PKGFile, Java = 'class') {
         if (Java === 'class') {
             Data.map(element => {
                 if (element.type === 'java') {

@@ -9,39 +9,45 @@ const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, FilesValidat
 
 //Imports<
 const { FilesDirectory, PoliciesDirectory } = require('./Resources/XMLDataDefault.json');
+const PKGFileBase = require('./Resources/PKGFileBase.json');
 
 // Call Classes Preset JS Files
 const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset, __init__ } = new Startup();
 const { registerShortcuts, unregisterShortcuts } = new GlobalShortcuts();
-const { ViewLocals, LoadXMLSettings } = new EventsProcess();
+const { ViewLocals, LoadXMLSettings, addPKGFileContent: addPKGFileContent_Replace } = new EventsProcess();
 const { restartApplication } = new MainProcess();
 const { TransformXMLToJSON, SendFileToRollOutLocation, DeleteEmptyDirectories, SendFileToRollOutLocationJava } = new FilesTratment();
-const { ValidateFiles, TreatmentFilesRoutes } = new FilesValidator();
+const { ValidateFiles, TreatmentFilesRoutes, CreatePKGFile } = new FilesValidator();
 
 // Procces Start
 __init__(FilesDirectory, PoliciesDirectory);
 
 // Definitions
-let Settings,
-  FileRouter,
+let FileRouter,
   FilePolicies,
   XMLRouter,
   XMLPolicies,
   CreateDirRouter,
-  CreateDirPolicies;
+  CreateDirPolicies,
+  PKGFile,
+  Settings = {
+    setDirectoryPackage: undefined,
+    setDirectoryPolicies: undefined,
+    setDirectoryRoutes: undefined,
+    setStatus: undefined,
+    setXMLConfig: undefined
+  };
 
 /**
  * UserSettings --> Data from this JSON file
  */
 try {
   const { directoryPackage, directoryPolicies, directoryRoutes, status, XMLConfig } = require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json'));
-  Settings = {
-    setDirectoryPackage: directoryPackage,
-    setDirectoryPolicies: directoryPolicies,
-    setDirectoryRoutes: directoryRoutes,
-    setStatus: status,
-    setXMLConfig: XMLConfig
-  };
+  Settings.setDirectoryPackage = directoryPackage;
+  Settings.setDirectoryPolicies = directoryPolicies;
+  Settings.setDirectoryRoutes = directoryRoutes;
+  Settings.setStatus = status;
+  Settings.setXMLConfig = XMLConfig;
 } catch (err) {
   restartApplication();
 };
@@ -227,6 +233,8 @@ ipcMain.on('SendXMLFiles', (event, { Path, Type }) => {
 ipcMain.on(
   'UploadFiles',
   (event, { fileName, Java, fileLocation }) => {
+    // PKG File Creation
+    PKGFile = CreatePKGFile(Settings.setDirectoryPackage, PKGFileBase)
     // Definitions
     XMLRouter = TransformXMLToJSON(Settings.setDirectoryRoutes);
     CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
@@ -238,20 +246,24 @@ ipcMain.on(
     // Conditional Event To Check The Router CUSTOM Or DEFAULT
     if (fileName.includes('.csv')) {
       // Execution
-      SendFileToRollOutLocation(FilePolicies, fileLocation, fileName, Settings.setDirectoryPackage);
+      SendFileToRollOutLocation(FilePolicies, fileLocation, fileName, Settings.setDirectoryPackage, PKGFile);
     } else if (fileName.includes('.java') || fileName.includes('.properties')) {
-      SendFileToRollOutLocationJava(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage, Java);
+      SendFileToRollOutLocationJava(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage, PKGFile, Java);
     } else {
       // Execution
-      SendFileToRollOutLocation(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage);
+      SendFileToRollOutLocation(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage, PKGFile);
     }
   }
 );
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('DeleteDirectories', () => {
-  for (let index = 0; index < 10; index++) {
-    DeleteEmptyDirectories(FileRouter, Settings.setDirectoryPackage);
-    DeleteEmptyDirectories(FilePolicies, Settings.setDirectoryPackage);
+  try {
+    for (let index = 0; index < 10; index++) {
+      DeleteEmptyDirectories(FileRouter, Settings.setDirectoryPackage);
+      DeleteEmptyDirectories(FilePolicies, Settings.setDirectoryPackage);
+    }
+  } catch (err) {
+    console.log(err);
   }
 })
 // -------------------------------------------------- // -------------------------------------------------- //

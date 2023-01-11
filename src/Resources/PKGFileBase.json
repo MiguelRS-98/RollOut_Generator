@@ -1,10 +1,10 @@
 {
-    "RollOut": "#Rollout\n## This script has been built automatically using BuildJiraRollout. \n# Please check the actions taken by the script as they may not be entirely correct. \n# Also check the order of the actions taken if any dependencies might be \n# encountered",
-    "Replacing-files-affected": "# Replacing files affected",
-    "Removing-files-removed-by-extension": "# Removing files removed by extension",
-    "Run-any-SQL,-MSQL,-and-other-scripts": "# Run any SQL, MSQL, and other scripts",
-    "Import-any-Integrator-data-affected": "# Import any Integrator data affected",
-    "Rebuilding-C-makefiles-if-necessary": "# Rebuilding C makefiles if necessary",
-    "Perform-any-environment-rebuilds-if-necessary": "# Perform any environment rebuilds if necessary\nMBUILD",
+    "RollOut": "# Rollout\n## This script has been built automatically using BuildJiraRollout. \n# Please check the actions taken by the script as they may not be entirely correct. \n# Also check the order of the actions taken if any dependencies might be \n# encountered\n\n",
+    "Replacing_files_affected": "# Replacing files affected",
+    "Removing_files_removed_by_extension": "# Removing files removed by extension\n\n",
+    "Run_any_SQL_MSQL_and_other_scripts": "# Run any SQL, MSQL, and other scripts\n\n",
+    "Import-any_Integrator_data_affected": "# Import any Integrator data affected\n\n",
+    "Rebuilding_C_makefiles_if_necessary": "# Rebuilding C makefiles if necessary\n\n",
+    "Perform_any_environment_rebuilds_if_necessary": "# Perform any environment rebuilds if necessary\nMBUILD\n\n",
     "End-of-the-Script": "# End of the Script"
 }
