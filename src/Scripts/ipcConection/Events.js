@@ -1,6 +1,6 @@
 // Node Modules2
 const { exec } = require('node:child_process');
-const { copyFile, writeFileSync, appendFileSync } = require('node:fs');
+const { copyFile, writeFileSync, appendFile } = require('node:fs');
 const { homedir } = require('node:os');
 const { join } = require('node:path');
 
@@ -48,44 +48,99 @@ class EventsProcess {
         );
         return;
     };
-    addPKGFileContent(RollOutPath, FileName, RouterFile) {
+    addPKGFileContent(Data, RollOutPath, fixRoute) {
+        console.log({ Data, RollOutPath });
+        // Definitions
         let getMainFolderPackage = RollOutPath.split('\\'),
             getMainNameDirectory = getMainFolderPackage[getMainFolderPackage.length - 1];
+        // Config's to Functions To Set Data In The PKG File
         let FunctionConfig = {
             REPLACE: (Router, Name) => {
-                let returnStringData = `REPLACE ${Router}/${Name} $LESDIR/${Router}`;
-                appendFileSync(
+                appendFile(
                     `${RollOutPath}\\${getMainNameDirectory.toUpperCase()}`,
-                    returnStringData,
-                    'utf-8'
+                    `\nREPLACE ${join(Router, Name)} $LESDIR/${Router.split('pkg/')[1]}`,
+                    (err) => {
+                        if (err) return console.log(err);
+                    }
                 )
             },
             LOADDATA: (Router, Name) => {
-                let returnStringData = `LOADDATA ${Router}/${Name} `;
-                appendFileSync(
-                    `${RollOutPath}\\${getMainNameDirectory.toUpperCase()}`,
-                    returnStringData,
-                    'utf-8'
-                )
+                if (Name.includes('.csv')) {
+                    let returnStringData = `\nLOADDATA\n${Router}/${Name} `;
+                    appendFile(
+                        `${RollOutPath}\\${getMainNameDirectory.toUpperCase()}`,
+                        returnStringData,
+                        (err) => {
+                            if (err) return console.log(err);
+                        }
+                    )
+                }
             },
             IMPORTSLDATA: (Router, Name) => {
-                let returnStringData = `IMPORTSLDATA ${Router}/${Name} `;
-                appendFileSync(
-                    `${RollOutPath}\\${getMainNameDirectory.toUpperCase()}`,
-                    returnStringData,
-                    'utf-8'
-                )
+                if (Name.includes('.slexp')) {
+                    let returnStringData = `IMPORTSLDATA\n${Router}/${Name} `;
+                    appendFile(
+                        `${RollOutPath}\\${getMainNameDirectory.toUpperCase()}`,
+                        returnStringData,
+                        (err) => {
+                            if (err) return console.log(err);
+                        }
+                    )
+                }
             },
-            RunSQLIgnoreErrors: (Router, Name) => {
-                let returnStringData = `RunSQLIgnoreErrors ${Router}/${Name} `;
-                appendFileSync(
-                    `${RollOutPath}\\${getMainNameDirectory.toUpperCase()}`,
-                    returnStringData,
-                    'utf-8'
-                )
+            RUN_SQL_IGNORE_ERRORS: (Router, Name) => {
+                if (Name.includes('.sql')) {
+                    let returnStringData = `RunSQLIgnoreErrors\n${Router}/${Name} `;
+                    appendFile(
+                        `${RollOutPath}\\${getMainNameDirectory.toUpperCase()}`,
+                        returnStringData,
+                        (err) => {
+                            if (err) return console.log(err);
+                        }
+                    )
+                }
             }
-        }
-    }
+        };
+        // Export Functions
+        // ---------------------------- // -------------------------- //
+        async function Replace(fileName) {
+            await Data.map(element => {
+                if (fileName.includes(element.type)) {
+                    FunctionConfig.REPLACE(fixRoute(element.routes), fileName)
+                };
+            });
+        };
+        // ---------------------------- // -------------------------- //
+        async function LoadData(fileName) {
+            await Data.map(element => {
+                if (fileName.includes(element.type)) {
+                    FunctionConfig.LOADDATA(fixRoute(element.routes), fileName)
+                };
+            });
+        };
+        // ---------------------------- // -------------------------- //
+        async function ImportSLData(fileName) {
+            await Data.map(element => {
+                if (fileName.includes(element.type)) {
+                    FunctionConfig.IMPORTSLDATA(fixRoute(element.routes), fileName)
+                };
+            });
+        };
+        // ---------------------------- // -------------------------- //
+        async function RunSQLWithoutErr(fileName) {
+            await Data.map(element => {
+                if (fileName.includes(element.type)) {
+                    FunctionConfig.RUN_SQL_IGNORE_ERRORS(fixRoute(element.routes), fileName)
+                };
+            });
+        };
+        return {
+            Replace,
+            LoadData,
+            ImportSLData,
+            RunSQLWithoutErr
+        };
+    };
 }
 
 module.exports = {

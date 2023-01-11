@@ -14,9 +14,9 @@ const PKGFileBase = require('./Resources/PKGFileBase.json');
 // Call Classes Preset JS Files
 const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset, __init__ } = new Startup();
 const { registerShortcuts, unregisterShortcuts } = new GlobalShortcuts();
-const { ViewLocals, LoadXMLSettings, addPKGFileContent: addPKGFileContent_Replace } = new EventsProcess();
+const { ViewLocals, LoadXMLSettings, addPKGFileContent } = new EventsProcess();
 const { restartApplication } = new MainProcess();
-const { TransformXMLToJSON, SendFileToRollOutLocation, DeleteEmptyDirectories, SendFileToRollOutLocationJava } = new FilesTratment();
+const { TransformXMLToJSON, SendFileToRollOutLocation, DeleteEmptyDirectories, SendFileToRollOutLocationJava, fixRoute } = new FilesTratment();
 const { ValidateFiles, TreatmentFilesRoutes, CreatePKGFile } = new FilesValidator();
 
 // Procces Start
@@ -157,6 +157,8 @@ const createWindow = () => {
     console.log('Throw JavaScript Node Exception To Create Settings Directory');
   };
 };
+// Configuration App
+app.setAppLogsPath(join(homedir(), 'AppData\\Roaming\\.UserSettings\\AppLogs'))
 // Disable Hardware Accelaration
 app.disableHardwareAcceleration();
 // When de app is ready, execute the the window
@@ -175,12 +177,10 @@ autoUpdater.on('update-downloaded', () => {
     detail:
       'A new version has been downloaded. Restart the application to apply the updates.',
   }
-
   dialog.showMessageBox(dialogOpts).then((returnValue) => {
     if (returnValue.response === 0) autoUpdater.quitAndInstall()
   })
 })
-
 // When the app is focused or not focused
 app.on('browser-window-focus', (event, window) => {
   window.on('focus', () => {
@@ -232,7 +232,7 @@ ipcMain.on('SendXMLFiles', (event, { Path, Type }) => {
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on(
   'UploadFiles',
-  (event, { fileName, Java, fileLocation }) => {
+  async (event, { fileName, Java, fileLocation }) => {
     // PKG File Creation
     PKGFile = CreatePKGFile(Settings.setDirectoryPackage, PKGFileBase)
     // Definitions
@@ -244,15 +244,24 @@ ipcMain.on(
     CreateDirPolicies = ValidateFiles(JSON.parse(XMLPolicies), Settings.setDirectoryPackage);
     FilePolicies = TreatmentFilesRoutes(CreateDirPolicies);
     // Conditional Event To Check The Router CUSTOM Or DEFAULT
+    // Conditional
     if (fileName.includes('.csv')) {
       // Execution
-      SendFileToRollOutLocation(FilePolicies, fileLocation, fileName, Settings.setDirectoryPackage, PKGFile);
+      SendFileToRollOutLocation(FilePolicies, fileLocation, fileName, Settings.setDirectoryPackage, PKGFunction);
+      // Execution
+      addPKGFileContent(FilePolicies, Settings.setDirectoryPackage, fixRoute).Replace(fileName)
+      // Conditional
     } else if (fileName.includes('.java') || fileName.includes('.properties')) {
-      SendFileToRollOutLocationJava(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage, PKGFile, Java);
+      SendFileToRollOutLocationJava(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage, Java);
+      // Execution
+      addPKGFileContent(FileRouter, Settings.setDirectoryPackage, fixRoute).Replace(fileName)
+      // Conditional
     } else {
       // Execution
-      SendFileToRollOutLocation(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage, PKGFile);
-    }
+      SendFileToRollOutLocation(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage);
+      // Execution
+      addPKGFileContent(FileRouter, Settings.setDirectoryPackage, fixRoute).Replace(fileName)
+    };
   }
 );
 // -------------------------------------------------- // -------------------------------------------------- //

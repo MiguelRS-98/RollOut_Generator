@@ -51,6 +51,10 @@ class Startup {
         if (!existsSync(join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter'))) {
             mkdirSync(join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter'));
         }
+        // Set Settings XML Directory
+        if (!existsSync(join(homedir(), 'AppData\\Roaming\\.UserSettings\\AppLogs'))) {
+            mkdirSync(join(homedir(), 'AppData\\Roaming\\.UserSettings\\AppLogs'));
+        }
     }
     UserSettingsFileDelete() {
         // Delete The Settings JSON File To Restore The Settings

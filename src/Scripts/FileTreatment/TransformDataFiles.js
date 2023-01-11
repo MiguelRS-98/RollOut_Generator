@@ -1,10 +1,12 @@
 // Node Modules
+const { ipcRenderer } = require('electron');
+const { ipcMain } = require('electron/main');
 const { readFileSync, copyFile, readdirSync, rmdir, existsSync } = require('node:fs');
 const { join } = require('node:path');
 const { xml2json } = require('xml-js');
 const { EventsProcess } = require('../ExportScripts');
 
-class FilesTratment extends EventsProcess{
+class FilesTratment {
     TransformXMLToJSON(XMLPathFile) {
         let result = xml2json(readFileSync(XMLPathFile, { encoding: 'utf-8' }), { compact: true });
         return result;
@@ -29,12 +31,11 @@ class FilesTratment extends EventsProcess{
                     for (let b = 0; b < temporalPaddingRoutes.length; b++) {
                         if (newStringDirectory === newStringDirectory) {
                             newStringDirectory += `/${paddingRoutes[b]}`;
-                            if (newStringDirectory.endsWith('/')) {
-                                newStringDirectory = newStringDirectory.slice(newStringDirectory.length + 1)
-                            }
-                        } else {
-                            return;
                         }
+                        if (newStringDirectory.endsWith('/')) {
+                            newStringDirectory = newStringDirectory.slice(newStringDirectory.length + 1)
+                        }
+                        return;
                     }
                     temporalPaddingRoutes.pop();
                     if (existsSync(join(directoryPackage, newStringDirectory)) && newStringDirectory.length !== 0) {
@@ -51,22 +52,26 @@ class FilesTratment extends EventsProcess{
             return;
         }
     }
-    SendFilesAlgorithm(element, filePath, Name, directoryPackage, PKGFile) {
-        console.log(this.fixRoute(element.routes).split('pkg/')[1]);
+    SendFilesAlgorithm(element, filePath, Name, directoryPackage) {
+        // console.log(this.fixRoute(element.routes).split('pkg/')[1]);
         let Destination = this.fixRoute(element.routes),
             PathFile = this.fixRoute(filePath);
         if (Name.includes(element.type)) {
-            copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
-                err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
-            })
-        }
+            copyFile(
+                PathFile,
+                join(directoryPackage, Destination, Name),
+                (err) => {
+                    err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
+                }
+            );
+        };
     }
-    SendFileToRollOutLocation(Data, filePath, Name, directoryPackage, PKGFile) {
+    SendFileToRollOutLocation(Data, filePath, Name, directoryPackage) {
         Data.map(routerElement => {
-            new FilesTratment().SendFilesAlgorithm(routerElement, filePath, Name, directoryPackage, PKGFile);
+            new FilesTratment().SendFilesAlgorithm(routerElement, filePath, Name, directoryPackage);
         })
     };
-    SendFileToRollOutLocationJava(Data, filePath, Name, directoryPackage, PKGFile, Java = 'class') {
+    SendFileToRollOutLocationJava(Data, filePath, Name, directoryPackage, Java = 'class') {
         if (Java === 'class') {
             Data.map(element => {
                 if (element.type === 'java') {

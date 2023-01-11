@@ -8,7 +8,7 @@ class FilesValidator {
             getMainNameDirectory = getMainFolderPackage[getMainFolderPackage.length - 1],
             ReturnStringDataRouter = `${RollOutPath}\\${getMainNameDirectory.toUpperCase()}`;
         
-        if (existsSync(ReturnStringDataRouter)) {
+        if (!existsSync(ReturnStringDataRouter)) {
             writeFileSync(
                 ReturnStringDataRouter,
                 `${RollOut}${Replacing_files_affected}`
