@@ -94,29 +94,6 @@ const createWindow = () => {
       }
     }
   ])
-  // Updates Events
-  autoUpdater.checkForUpdates();
-  // -----------------------------------------
-  autoUpdater.on('update-available', () => {
-    info('Actualizacion Disponible')
-  }); // -----------------------------------------
-  autoUpdater.on('checking-for-update', () => {
-    info('Buscando Actualizaciones...')
-  }); // -----------------------------------------
-  autoUpdater.on('update-downloaded', () => {
-    info('Actualizacion Descargada')
-  }); // -----------------------------------------
-  autoUpdater.on('download-progress', (progress) => {
-    info('\n\nDescargando Actualizacion...')
-    info(progress)
-  }); // -----------------------------------------
-  autoUpdater.on('update-not-available', () => {
-    info('Tienes La Ultima Version Disponible ✅')
-  }); // -----------------------------------------
-  autoUpdater.on('error', () => {
-    info('rror En Actualizar La App ✅')
-  }) // -----------------------------------------
-
   // Configs
   mainWindow.setTitle('NetLogistiK - MoveFiles')
   mainWindow.setMaxListeners(20);
@@ -187,10 +164,31 @@ const createWindow = () => {
 app.setAppLogsPath(join(homedir(), 'AppData\\Roaming\\.UserSettings\\AppLogs'));
 // Disable Hardware Accelaration
 app.disableHardwareAcceleration();
+// Updates Events
+autoUpdater.on('update-available', () => {
+  info('Actualizacion Disponible')
+}); // -----------------------------------------
+autoUpdater.on('checking-for-update', () => {
+  info('Buscando Actualizaciones...')
+}); // -----------------------------------------
+autoUpdater.on('update-downloaded', () => {
+  info('Actualizacion Descargada')
+}); // -----------------------------------------
+autoUpdater.on('download-progress', (progress) => {
+  info('\n\nDescargando Actualizacion...')
+  info(progress)
+}); // -----------------------------------------
+autoUpdater.on('update-not-available', () => {
+  info('Tienes La Ultima Version Disponible ✅')
+}); // -----------------------------------------
+autoUpdater.on('error', () => {
+  info('rror En Actualizar La App ✅')
+}) // -----------------------------------------
 // When de app is ready, execute the the window
 app.on('ready', () => {
   registerShortcuts('CommandOrControl+R');
   createWindow();
+  autoUpdater.checkForUpdates();
 });
 // When the app is focused or not focused
 app.on('browser-window-focus', (event, window) => {
@@ -243,9 +241,9 @@ ipcMain.on('SendXMLFiles', (event, { Path, Type }) => {
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on(
   'UploadFiles',
-  async (event, { fileName, Java, fileLocation }) => {
+  (event, { fileName, Java, fileLocation }) => {
     // PKG File Creation
-    PKGFile = CreatePKGFile(Settings.setDirectoryPackage, PKGFileBase)
+    CreatePKGFile(Settings.setDirectoryPackage, PKGFileBase)
     // Definitions
     XMLRouter = TransformXMLToJSON(Settings.setDirectoryRoutes);
     CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
@@ -258,20 +256,20 @@ ipcMain.on(
     // Conditional
     if (fileName.includes('.csv')) {
       // Execution
-      SendFileToRollOutLocation(FilePolicies, fileLocation, fileName, Settings.setDirectoryPackage, PKGFunction);
+      SendFileToRollOutLocation(FilePolicies, fileLocation, fileName, Settings.setDirectoryPackage);
       // Execution
-      addPKGFileContent(FilePolicies, Settings.setDirectoryPackage, fixRoute).Replace(fileName)
+      addPKGFileContent(FilePolicies, Settings.setDirectoryPackage, fixRoute)
       // Conditional
     } else if (fileName.includes('.java') || fileName.includes('.properties')) {
       SendFileToRollOutLocationJava(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage, Java);
       // Execution
-      addPKGFileContent(FileRouter, Settings.setDirectoryPackage, fixRoute).Replace(fileName)
+      addPKGFileContent(FileRouter, Settings.setDirectoryPackage, fixRoute)
       // Conditional
     } else {
       // Execution
       SendFileToRollOutLocation(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage);
       // Execution
-      addPKGFileContent(FileRouter, Settings.setDirectoryPackage, fixRoute).Replace(fileName)
+      addPKGFileContent(FileRouter, Settings.setDirectoryPackage, fixRoute)
     };
   }
 );

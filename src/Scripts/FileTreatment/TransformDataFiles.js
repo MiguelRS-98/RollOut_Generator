@@ -4,7 +4,6 @@ const { ipcMain } = require('electron/main');
 const { readFileSync, copyFile, readdirSync, rmdir, existsSync } = require('node:fs');
 const { join } = require('node:path');
 const { xml2json } = require('xml-js');
-const { EventsProcess } = require('../ExportScripts');
 
 class FilesTratment {
     TransformXMLToJSON(XMLPathFile) {
