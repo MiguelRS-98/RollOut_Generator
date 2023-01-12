@@ -1,20 +1,33 @@
 {
   "name": "movefiles",
   "productName": "NetLogistiK - Mover Archivos",
-  "version": "1.9.5",
+  "version": "1.7.0",
   "description": "Generador de carpetas y archivos para RollOuts",
   "main": "src/index.js",
   "type": "commonjs",
+  "build": {
+    "appId": "netlogistik.com",
+    "productName": "NetLogistiK - MoveFiles",
+    "icon": "C:/movefiles_1.5/src/Resources/MoveFiles_Icon.ico",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "PintoGamer64",
+        "repo": "Move_Files"
+      }
+    ]
+  },
   "publisher": "PintoGamer64",
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
+    "trace": "electron --trace-warnings",
     "lint": "echo \"No linting configured\"",
+    "build:dir": "electron-builder --dir",
     "build-win": "electron-builder -w",
-    "build-lin": "electron-builder -l",
-    "build-mac": "electron-builder -m"
+    "release": "electron-builder -p always"
   },
   "keywords": [],
   "author": {
@@ -31,12 +44,13 @@
   },
   "os": "win32",
   "arch": "x64",
-  "icon": "C:/movefiles_1.5/src/Resources/MoveFiles_Icon",
+  "icon": "https://i.pinimg.com/originals/97/b4/f1/97b4f1e4eae781923b8c837b3ef19acc.jpg",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.0.3",
+    "electron-log": "^4.4.8",
     "electron-squirrel-startup": "^1.0.0",
-    "update-electron-app": "^2.0.1",
+    "electron-updater": "^5.3.0",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {

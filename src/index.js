@@ -1,11 +1,13 @@
 // Node Modules
 const { app, BrowserWindow, ipcMain, autoUpdater, dialog, ipcRenderer } = require('electron');
+const { autoUpdater } = require('electron-updater');
+const { info, transports } = require('electron-log');
 const { homedir } = require('os');
 const { join } = require('node:path');
 
 // Local Modules
 const { Startup } = require('./Startup');
-const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, FilesValidator } = require('./Scripts/ExportScripts');
+const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, FilesValidator, AutoUpdaterApp } = require('./Scripts/ExportScripts');
 
 //Imports<
 const { FilesDirectory, PoliciesDirectory } = require('./Resources/XMLDataDefault.json');
@@ -21,7 +23,8 @@ const { ValidateFiles, TreatmentFilesRoutes, CreatePKGFile } = new FilesValidato
 
 // Procces Start
 __init__(FilesDirectory, PoliciesDirectory);
-
+transports.file.resolvePath = () => join(homedir(), '\\AppData\\Roaming\\.UserSettings\\AppLogs\\dataUpdates.log');
+info('Log Ready to work');
 // Definitions
 let FileRouter,
   FilePolicies,
@@ -91,6 +94,15 @@ const createWindow = () => {
       }
     }
   ])
+  // Updates Events
+  autoUpdater.checkForUpdates();
+  // -------------------------------------------------- // -------------------------------------------------- //
+  autoUpdater.on('update-available', () => {
+    
+  })
+  // -------------------------------------------------- // -------------------------------------------------- //
+
+
   // Configs
   mainWindow.setTitle('NetLogistiK - MoveFiles')
   mainWindow.setMaxListeners(20);
@@ -158,7 +170,7 @@ const createWindow = () => {
   };
 };
 // Configuration App
-app.setAppLogsPath(join(homedir(), 'AppData\\Roaming\\.UserSettings\\AppLogs'))
+app.setAppLogsPath(join(homedir(), 'AppData\\Roaming\\.UserSettings\\AppLogs'));
 // Disable Hardware Accelaration
 app.disableHardwareAcceleration();
 // When de app is ready, execute the the window
@@ -166,21 +178,6 @@ app.on('ready', () => {
   registerShortcuts('CommandOrControl+R');
   createWindow();
 });
-// Automatic Update
-require('update-electron-app')();
-autoUpdater.on('update-downloaded', () => {
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
-    detail:
-      'A new version has been downloaded. Restart the application to apply the updates.',
-  }
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall()
-  })
-})
 // When the app is focused or not focused
 app.on('browser-window-focus', (event, window) => {
   window.on('focus', () => {
@@ -274,7 +271,7 @@ ipcMain.on('DeleteDirectories', () => {
   } catch (err) {
     console.log(err);
   }
-})
+});
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('Restart', () => {
   UserSettingsFileGenerator({
@@ -285,4 +282,4 @@ ipcMain.on('Restart', () => {
     directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\CUSTOM\\Policies.xml')
   });
   restartApplication();
-})
+});
