@@ -24,7 +24,7 @@ const { ValidateFiles, TreatmentFilesRoutes, CreatePKGFile } = new FilesValidato
 // Procces Start
 __init__(FilesDirectory, PoliciesDirectory);
 transports.file.resolvePath = () => join(homedir(), '\\AppData\\Roaming\\.UserSettings\\AppLogs\\dataUpdates.log');
-info('Log Ready to work');
+info(`Log Ready to work with version ${app.getVersion()}`);
 // Definitions
 let FileRouter,
   FilePolicies,
@@ -96,12 +96,26 @@ const createWindow = () => {
   ])
   // Updates Events
   autoUpdater.checkForUpdates();
-  // -------------------------------------------------- // -------------------------------------------------- //
+  // -----------------------------------------
   autoUpdater.on('update-available', () => {
-    
-  })
-  // -------------------------------------------------- // -------------------------------------------------- //
-
+    info('Actualizacion Disponible')
+  }); // -----------------------------------------
+  autoUpdater.on('checking-for-update', () => {
+    info('Buscando Actualizaciones...')
+  }); // -----------------------------------------
+  autoUpdater.on('update-downloaded', () => {
+    info('Actualizacion Descargada')
+  }); // -----------------------------------------
+  autoUpdater.on('download-progress', (progress) => {
+    info('\n\nDescargando Actualizacion...')
+    info(progress)
+  }); // -----------------------------------------
+  autoUpdater.on('update-not-available', () => {
+    info('Tienes La Ultima Version Disponible ✅')
+  }); // -----------------------------------------
+  autoUpdater.on('error', () => {
+    info('rror En Actualizar La App ✅')
+  }) // -----------------------------------------
 
   // Configs
   mainWindow.setTitle('NetLogistiK - MoveFiles')
