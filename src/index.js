@@ -1,5 +1,5 @@
 // Node Modules
-const { app, BrowserWindow, ipcMain, autoUpdater, dialog, ipcRenderer } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const { info, transports } = require('electron-log');
 const { homedir } = require('os');
