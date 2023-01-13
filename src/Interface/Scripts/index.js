@@ -48,6 +48,7 @@ function retrieveFiles(files) {
         processFiles(file)
     }
     window.main.deleteDirectories();
+    window.main.RollOutCreation()
 }
 
 function processFiles(file) {

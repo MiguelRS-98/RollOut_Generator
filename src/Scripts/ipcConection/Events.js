@@ -1,6 +1,6 @@
 // Node Modules2
 const { exec } = require('node:child_process');
-const { copyFile, writeFileSync, appendFile } = require('node:fs');
+const { copyFile, writeFileSync, appendFileSync } = require('node:fs');
 const { homedir } = require('node:os');
 const { join } = require('node:path');
 
@@ -48,12 +48,75 @@ class EventsProcess {
         );
         return;
     };
-    addPKGFileContent(Data, RollOutPath, fixRoute) {
-        Data.map(element => {
-            // Definitions
-            let getMainFolderPackage = element.routes.split('pkg/')[1];
-            console.log(getMainFolderPackage);
-        })
+    addPKGFileContent(RollOutPath, Data) {
+        console.log(Data);
+        let getMainFolderPackage = RollOutPath.split('\\'),
+            getMainNameDirectory = getMainFolderPackage[getMainFolderPackage.length - 1],
+            ReturnStringDataRouter = `${RollOutPath}\\${getMainNameDirectory.toUpperCase()}`;
+        console.log(ReturnStringDataRouter);
+        let Functions = {
+            REPLACE: (ArrayData) => {
+                ArrayData.map(element => {
+                    appendFileSync(
+                        ReturnStringDataRouter,
+                        `\nREPLACE ${element.normalize}${element.name} $LESDIR/${element.path}`
+                    )
+                })
+            },
+            LOADDATA: (ArrayData) => {
+                appendFileSync(
+                    ReturnStringDataRouter,
+                    `\n\n# Removing files removed by extension.\n\n# Load any data affected.`
+                )
+                ArrayData.map(element => {
+                    if (element.name.includes('.csv')) {
+                        appendFileSync(
+                            ReturnStringDataRouter,
+                            `\nLOADDATA $LESDIR/${element.normalize}${element.name} ${element.name}`
+                        )
+                    }
+                })
+            },
+            RUNSQL: (ArrayData) => {
+                appendFileSync(
+                    ReturnStringDataRouter,
+                    `\n\n# Run any SQL, MSQL, and other scripts`
+                )
+                ArrayData.map(element => {
+                    if (element.name.includes('.sql')) {
+                        appendFileSync(
+                            ReturnStringDataRouter,
+                            `\nRunSQLIgnoreErrors $LESDIR/${element.normalize}${element.name} ${element.name}`
+                        )
+                    }
+                })
+            },
+            IMPORTSLDATA: (ArrayData) => {
+                appendFileSync(
+                    ReturnStringDataRouter,
+                    `\n\n# Import any Integrator data affected`
+                )
+                ArrayData.map(element => {
+                    if (element.name.includes('.slexp')) {
+                        appendFileSync(
+                            ReturnStringDataRouter,
+                            `\nIMPORTSLDATA $LESDIR/${element.normalize}${element.name} ${element.name}`
+                        )
+                    }
+                })
+            },
+            COMPLETE: () => {
+                appendFileSync(
+                    ReturnStringDataRouter,
+                    `\n\n# Rebuilding C makefiles if necessary\nRBUILD\n\n# Perform any environment rebuilds if necessary.\nMBUILD\n\n# End of the Script `
+                )
+            }
+        };
+        Functions.REPLACE(Data);
+        Functions.LOADDATA(Data);
+        Functions.RUNSQL(Data);
+        Functions.IMPORTSLDATA(Data);
+        Functions.COMPLETE();
     };
 }
 

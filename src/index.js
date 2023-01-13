@@ -18,7 +18,7 @@ const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset
 const { registerShortcuts, unregisterShortcuts } = new GlobalShortcuts();
 const { ViewLocals, LoadXMLSettings, addPKGFileContent } = new EventsProcess();
 const { restartApplication } = new MainProcess();
-const { TransformXMLToJSON, SendFileToRollOutLocation, DeleteEmptyDirectories, SendFileToRollOutLocationJava, fixRoute } = new FilesTratment();
+const { TransformXMLToJSON, SendFileToRollOutLocation, DeleteEmptyDirectories, SendFileToRollOutLocationJava } = new FilesTratment();
 const { ValidateFiles, TreatmentFilesRoutes, CreatePKGFile } = new FilesValidator();
 
 // Procces Start
@@ -32,7 +32,7 @@ let FileRouter,
   XMLPolicies,
   CreateDirRouter,
   CreateDirPolicies,
-  PKGFile,
+  ResponceMethod = [],
   Settings = {
     setDirectoryPackage: undefined,
     setDirectoryPolicies: undefined,
@@ -101,24 +101,10 @@ const createWindow = () => {
   autoUpdater.on('checking-for-update', () => {
     info('Buscando Actualizaciones...')
   }); // -----------------------------------------
-  autoUpdater.on('update-downloaded', (data) => {
+  autoUpdater.on('update-downloaded', () => {
     info('Actualizacion Descargada')
-    dialog.showMessageBoxSync(mainWindow, {
-      title: `Actualizacion Disponible - ${data.version}`,
-      message: `Hay una actualizacion disponible para MoveFiles ( ${app.getVersion()} -> ${data.version} ) ¿deseas instalarla?`,
-      detail: 'Al pulsar "Acerpatr" o reinicar la app, la actualizacion se instalara automaticamente',
-      icon: 'C:/Move_Files/src/Resources/MoveFiles_Update_Icon.png',
-      buttons: ['Instalar', 'Mas tarde'],
-      type: 'question'
-    }).then((responce) => {
-      if (responce === 0) {
-        restartApplication();
-      }
-      return;
-    })
   }); // -----------------------------------------
   autoUpdater.on('download-progress', (progress) => {
-    info('\n\nDescargando Actualizacion...')
     info(`[ Descargando... ${Math.trunc(progress.percent)}% ]`)
   }); // -----------------------------------------
   autoUpdater.on('update-not-available', () => {
@@ -269,32 +255,31 @@ ipcMain.on(
     // Conditional
     if (fileName.includes('.csv')) {
       // Execution
-      SendFileToRollOutLocation(FilePolicies, fileLocation, fileName, Settings.setDirectoryPackage);
-      // Execution
-      addPKGFileContent(FilePolicies, Settings.setDirectoryPackage, fixRoute)
+      SendFileToRollOutLocation(ResponceMethod, FilePolicies, fileLocation, fileName, Settings.setDirectoryPackage);
       // Conditional
     } else if (fileName.includes('.java') || fileName.includes('.properties')) {
-      SendFileToRollOutLocationJava(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage, Java);
       // Execution
-      addPKGFileContent(FileRouter, Settings.setDirectoryPackage, fixRoute)
+      SendFileToRollOutLocationJava(ResponceMethod, FileRouter, fileLocation, fileName, Settings.setDirectoryPackage, Java);
       // Conditional
     } else {
       // Execution
-      SendFileToRollOutLocation(FileRouter, fileLocation, fileName, Settings.setDirectoryPackage);
-      // Execution
-      addPKGFileContent(FileRouter, Settings.setDirectoryPackage, fixRoute)
+      SendFileToRollOutLocation(ResponceMethod, FileRouter, fileLocation, fileName, Settings.setDirectoryPackage);
     };
   }
 );
 // -------------------------------------------------- // -------------------------------------------------- //
+ipcMain.on('UploadDataToPKGFile', () => {
+  addPKGFileContent(Settings.setDirectoryPackage, ResponceMethod)
+})
+// -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('DeleteDirectories', () => {
   try {
-    for (let index = 0; index < 10; index++) {
+    for (let index = 0; index < 30; index++) {
       DeleteEmptyDirectories(FileRouter, Settings.setDirectoryPackage);
       DeleteEmptyDirectories(FilePolicies, Settings.setDirectoryPackage);
     }
   } catch (err) {
-    console.log(err);
+    return;
   }
 });
 // -------------------------------------------------- // -------------------------------------------------- //

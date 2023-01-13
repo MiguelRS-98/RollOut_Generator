@@ -22,9 +22,9 @@ class FilesTratment {
         try {
             Data.map(element => {
                 let newStringDirectory,
-                newArrayDirectoryContent,
-                paddingRoutes = element.routes.split('/'),
-                temporalPaddingRoutes = element.routes.split('/');
+                    newArrayDirectoryContent,
+                    paddingRoutes = element.routes.split('/'),
+                    temporalPaddingRoutes = element.routes.split('/');
                 for (let prIdx = 0; prIdx < paddingRoutes.length; prIdx++) {
                     newStringDirectory = ""
                     for (let b = 0; b < temporalPaddingRoutes.length; b++) {
@@ -37,8 +37,7 @@ class FilesTratment {
                         newArrayDirectoryContent = readdirSync(join(directoryPackage, newStringDirectory), { encoding: 'utf-8' })
                         if (newArrayDirectoryContent.length === 0) {
                             rmdir(join(directoryPackage, newStringDirectory), (err) => {
-                                if (err) return console.log(err);
-                                if (!err) return console.log('Directory Remove Succesfully');
+                                if (err) return;
                             })
                         }
                     }
@@ -49,45 +48,74 @@ class FilesTratment {
         }
     }
     SendFilesAlgorithm(element, filePath, Name, directoryPackage) {
-        // console.log(this.fixRoute(element.routes).split('pkg/')[1]);
         let Destination = this.fixRoute(element.routes),
-            PathFile = this.fixRoute(filePath);
+            PathFile = this.fixRoute(filePath),
+            resultFile;
         if (Name.includes(element.type)) {
             copyFile(
                 PathFile,
                 join(directoryPackage, Destination, Name),
                 (err) => {
-                    err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
+                    if (err) return console.log(err);
                 }
             );
+            resultFile = {
+                normalize: Destination,
+                path: Destination.split('pkg/')[1],
+                name: Name
+            }
         };
+        return resultFile
     }
-    SendFileToRollOutLocation(Data, filePath, Name, directoryPackage) {
+    SendFileToRollOutLocation(ResponceMethod, Data, filePath, Name, directoryPackage) {
+        let ResponceFT;
         Data.map(routerElement => {
-            new FilesTratment().SendFilesAlgorithm(routerElement, filePath, Name, directoryPackage);
+            ResponceFT = new FilesTratment().SendFilesAlgorithm(routerElement, filePath, Name, directoryPackage);
+            if (ResponceFT !== undefined && !ResponceMethod.includes(ResponceFT)) {
+                ResponceMethod.push(ResponceFT);
+            }
         })
     };
-    SendFileToRollOutLocationJava(Data, filePath, Name, directoryPackage, Java = 'class') {
+    SendFileToRollOutLocationJava(ResponceMethod, Data, filePath, Name, directoryPackage, Java = 'class') {
+        let Destination, PathFile;
         if (Java === 'class') {
             Data.map(element => {
                 if (element.type === 'java') {
-                    let Destination = new FilesTratment().fixRoute(element.routes),
-                        PathFile = new FilesTratment().fixRoute(filePath);
+                    Destination = new FilesTratment().fixRoute(element.routes);
+                    PathFile = new FilesTratment().fixRoute(filePath);
                     if (Name.includes(element.type)) {
                         copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
                             err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
-                        })
+                        });
+                        // Array.ProtoType.Add
+                        let resultFile = {
+                            normalize: Destination,
+                            path: Destination.split('pkg/')[1],
+                            name: Name
+                        };
+                        if (resultFile !== undefined && !ResponceMethod.includes(resultFile)) {
+                            ResponceMethod.push(resultFile);
+                        }
                     };
                 };
             });
         } else {
             Data.map(element => {
                 if (element.type === 'mtf') {
-                    let Destination = new FilesTratment().fixRoute(element.routes),
-                        PathFile = new FilesTratment().fixRoute(filePath);
+                    Destination = new FilesTratment().fixRoute(element.routes);
+                    PathFile = new FilesTratment().fixRoute(filePath);
                     copyFile(PathFile, join(directoryPackage, Destination, Name), (err) => {
                         err ? console.log(err) : console.log(`Archivos ${element.type} copiado satisfactoriamente`)
                     });
+                    // Array.ProtoType.Add
+                    let resultFile = {
+                        normalize: Destination,
+                        path: Destination.split('pkg/')[1],
+                        name: Name
+                    };
+                    if (resultFile !== undefined && !ResponceMethod.includes(resultFile)) {
+                        ResponceMethod.push(resultFile);
+                    }
                 };
             });
         };

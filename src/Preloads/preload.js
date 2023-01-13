@@ -25,6 +25,9 @@ function getFiles(Name, Path, JavaTreatment) {
 function deleteDirectories() {
     ipcRenderer.send('DeleteDirectories');
 }
+function RollOutCreation(){
+    ipcRenderer.send('UploadDataToPKGFile')
+}
 
 contextBridge.exposeInMainWorld(
     'main',
@@ -33,6 +36,7 @@ contextBridge.exposeInMainWorld(
         RestoreSettings,
         SetXMLConfigFiles,
         getFiles,
-        deleteDirectories
+        deleteDirectories,
+        RollOutCreation
     }
 );
