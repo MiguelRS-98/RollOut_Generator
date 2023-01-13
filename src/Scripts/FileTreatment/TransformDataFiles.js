@@ -22,19 +22,15 @@ class FilesTratment {
         try {
             Data.map(element => {
                 let newStringDirectory,
-                    newArrayDirectoryContent,
-                    paddingRoutes = element.routes.split('/'),
-                    temporalPaddingRoutes = element.routes.split('/');
+                newArrayDirectoryContent,
+                paddingRoutes = element.routes.split('/'),
+                temporalPaddingRoutes = element.routes.split('/');
                 for (let prIdx = 0; prIdx < paddingRoutes.length; prIdx++) {
                     newStringDirectory = ""
                     for (let b = 0; b < temporalPaddingRoutes.length; b++) {
                         if (newStringDirectory === newStringDirectory) {
                             newStringDirectory += `/${paddingRoutes[b]}`;
                         }
-                        if (newStringDirectory.endsWith('/')) {
-                            newStringDirectory = newStringDirectory.slice(newStringDirectory.length + 1)
-                        }
-                        return;
                     }
                     temporalPaddingRoutes.pop();
                     if (existsSync(join(directoryPackage, newStringDirectory)) && newStringDirectory.length !== 0) {
@@ -42,6 +38,7 @@ class FilesTratment {
                         if (newArrayDirectoryContent.length === 0) {
                             rmdir(join(directoryPackage, newStringDirectory), (err) => {
                                 if (err) return console.log(err);
+                                if (!err) return console.log('Directory Remove Succesfully');
                             })
                         }
                     }
