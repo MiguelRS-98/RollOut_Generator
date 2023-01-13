@@ -189,6 +189,10 @@ app.on('ready', () => {
   createWindow();
   autoUpdater.checkForUpdates();
 });
+// When the app is Quit throw message
+app.on('quit', () => {
+  info('Exit To Application\n\n\n')
+})
 // When the app is focused or not focused
 app.on('browser-window-focus', (event, window) => {
   window.on('focus', () => {
