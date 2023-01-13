@@ -7,13 +7,11 @@ class FilesValidator {
         let getMainFolderPackage = RollOutPath.split('\\'),
             getMainNameDirectory = getMainFolderPackage[getMainFolderPackage.length - 1],
             ReturnStringDataRouter = `${RollOutPath}\\${getMainNameDirectory.toUpperCase()}`;
-        
-        if (!existsSync(ReturnStringDataRouter)) {
-            writeFileSync(
-                ReturnStringDataRouter,
-                `${RollOut}${Replacing_files_affected}`
-            );
-        }
+
+        writeFileSync(
+            ReturnStringDataRouter,
+            `${RollOut}${Replacing_files_affected}`
+        );
     }
     CreateDirectorysFiles(JSONArray, RollOutPath) {
         let routerIterator = "";

@@ -269,7 +269,8 @@ ipcMain.on(
 );
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('UploadDataToPKGFile', () => {
-  addPKGFileContent(Settings.setDirectoryPackage, ResponceMethod)
+  addPKGFileContent(Settings.setDirectoryPackage, ResponceMethod);
+  ResponceMethod = [];
 })
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('DeleteDirectories', () => {
