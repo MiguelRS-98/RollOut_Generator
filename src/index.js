@@ -1,5 +1,5 @@
 // Node Modules
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const { info, transports } = require('electron-log');
 const { homedir } = require('os');
@@ -94,6 +94,39 @@ const createWindow = () => {
       }
     }
   ])
+  // Updates Events
+  autoUpdater.on('update-available', () => {
+    info('Actualizacion Disponible')
+  }); // -----------------------------------------
+  autoUpdater.on('checking-for-update', () => {
+    info('Buscando Actualizaciones...')
+  }); // -----------------------------------------
+  autoUpdater.on('update-downloaded', (data) => {
+    info('Actualizacion Descargada')
+    dialog.showMessageBoxSync(mainWindow, {
+      title: `Actualizacion Disponible - ${data.version}`,
+      message: `Hay una actualizacion disponible para MoveFiles ( ${app.getVersion()} -> ${data.version} ) ¿deseas instalarla?`,
+      detail: 'Al pulsar "Acerpatr" o reinicar la app, la actualizacion se instalara automaticamente',
+      icon: 'C:/Move_Files/src/Resources/MoveFiles_Update_Icon.png',
+      buttons: ['Instalar', 'Mas tarde'],
+      type: 'question'
+    }).then((responce) => {
+      if (responce === 0) {
+        restartApplication();
+      }
+      return;
+    })
+  }); // -----------------------------------------
+  autoUpdater.on('download-progress', (progress) => {
+    info('\n\nDescargando Actualizacion...')
+    info(`[ Descargando... ${Math.trunc(progress.percent)}% ]`)
+  }); // -----------------------------------------
+  autoUpdater.on('update-not-available', () => {
+    info('Tienes La Ultima Version Disponible ✅')
+  }); // -----------------------------------------
+  autoUpdater.on('error', () => {
+    info('rror En Actualizar La App ✅')
+  }) // -----------------------------------------
   // Configs
   mainWindow.setTitle('NetLogistiK - MoveFiles')
   mainWindow.setMaxListeners(20);
@@ -164,26 +197,6 @@ const createWindow = () => {
 app.setAppLogsPath(join(homedir(), 'AppData\\Roaming\\.UserSettings\\AppLogs'));
 // Disable Hardware Accelaration
 app.disableHardwareAcceleration();
-// Updates Events
-autoUpdater.on('update-available', () => {
-  info('Actualizacion Disponible')
-}); // -----------------------------------------
-autoUpdater.on('checking-for-update', () => {
-  info('Buscando Actualizaciones...')
-}); // -----------------------------------------
-autoUpdater.on('update-downloaded', () => {
-  info('Actualizacion Descargada')
-}); // -----------------------------------------
-autoUpdater.on('download-progress', (progress) => {
-  info('\n\nDescargando Actualizacion...')
-  info(progress)
-}); // -----------------------------------------
-autoUpdater.on('update-not-available', () => {
-  info('Tienes La Ultima Version Disponible ✅')
-}); // -----------------------------------------
-autoUpdater.on('error', () => {
-  info('rror En Actualizar La App ✅')
-}) // -----------------------------------------
 // When de app is ready, execute the the window
 app.on('ready', () => {
   registerShortcuts('CommandOrControl+R');
