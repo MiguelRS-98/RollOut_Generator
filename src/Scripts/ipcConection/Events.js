@@ -72,7 +72,7 @@ class EventsProcess {
                     if (element.name.includes('.csv')) {
                         appendFileSync(
                             ReturnStringDataRouter,
-                            `\nLOADDATA $LESDIR/${element.normalize}${element.name} ${element.name}`
+                            `\nLOADDATA $LESDIR/${element.path}${element.name} ${element.name}`
                         )
                     }
                 })
@@ -86,7 +86,7 @@ class EventsProcess {
                     if (element.name.includes('.sql')) {
                         appendFileSync(
                             ReturnStringDataRouter,
-                            `\nRunSQLIgnoreErrors $LESDIR/${element.normalize}${element.name} ${element.name}`
+                            `\nRunSQLIgnoreErrors $LESDIR/${element.path}${element.name} ${element.name}`
                         )
                     }
                 })
@@ -100,7 +100,7 @@ class EventsProcess {
                     if (element.name.includes('.slexp')) {
                         appendFileSync(
                             ReturnStringDataRouter,
-                            `\nIMPORTSLDATA $LESDIR/${element.normalize}${element.name} ${element.name}`
+                            `\nIMPORTSLDATA $LESDIR/${element.path}${element.name} ${element.name}`
                         )
                     }
                 })
@@ -108,7 +108,7 @@ class EventsProcess {
             COMPLETE: () => {
                 appendFileSync(
                     ReturnStringDataRouter,
-                    `\n\n# Rebuilding C makefiles if necessary\nRBUILD\n\n# Perform any environment rebuilds if necessary.\nMBUILD\n\n# End of the Script `
+                    `\n\n# Rebuilding C makefiles if necessary\n\n# Perform any environment rebuilds if necessary.\nMBUILD\n\n# End of the Script `
                 )
             }
         };

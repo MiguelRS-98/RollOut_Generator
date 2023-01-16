@@ -52,17 +52,19 @@ class FilesTratment {
             PathFile = this.fixRoute(filePath),
             resultFile;
         if (Name.includes(element.type)) {
-            copyFile(
-                PathFile,
-                join(directoryPackage, Destination, Name),
-                (err) => {
-                    if (err) return console.log(err);
+            if (!Name.includes('.msql')) {
+                copyFile(
+                    PathFile,
+                    join(directoryPackage, Destination, Name),
+                    (err) => {
+                        if (err) return console.log(err);
+                    }
+                );
+                resultFile = {
+                    normalize: Destination,
+                    path: Destination.split(`${Destination.split('/')[0]}/`)[1],
+                    name: Name
                 }
-            );
-            resultFile = {
-                normalize: Destination,
-                path: Destination.split('pkg/')[1],
-                name: Name
             }
         };
         return resultFile
@@ -90,7 +92,7 @@ class FilesTratment {
                         // Array.ProtoType.Add
                         let resultFile = {
                             normalize: Destination,
-                            path: Destination.split('pkg/')[1],
+                            path: Destination.split(`${Destination.split('/')[0]}/`)[1],
                             name: Name
                         };
                         if (resultFile !== undefined && !ResponceMethod.includes(resultFile)) {
@@ -110,7 +112,7 @@ class FilesTratment {
                     // Array.ProtoType.Add
                     let resultFile = {
                         normalize: Destination,
-                        path: Destination.split('pkg/')[1],
+                        path: Destination.split(`${Destination.split('/')[0]}/`)[1],
                         name: Name
                     };
                     if (resultFile !== undefined && !ResponceMethod.includes(resultFile)) {

@@ -1,7 +1,7 @@
 {
-  "name": "movefiles",
-  "productName": "NetLogistiK - Mover Archivos",
-  "version": "1.9.0",
+  "name": "rollout_generator",
+  "productName": "RollOut Generator",
+  "version": "1.9.5",
   "description": "Generador de carpetas y archivos para RollOuts",
   "main": "src/index.js",
   "type": "commonjs",
@@ -13,7 +13,7 @@
       {
         "provider": "github",
         "owner": "PintoGamer64",
-        "repo": "Move_Files"
+        "repo": "RollOut_Generator"
       }
     ]
   },
@@ -36,11 +36,11 @@
     "email": "pintogamer64@gmail.com"
   },
   "repository": {
-    "url": "https://github.com/PintoGamer64/Move_Files"
+    "url": "https://github.com/PintoGamer64/RollOut_Generator"
   },
   "bugs": {
     "email": "pintogamer64@gmail.com",
-    "url": "https://github.com/PintoGamer64/Move_Files/issues"
+    "url": "https://github.com/PintoGamer64/RollOut_Generator/issues"
   },
   "os": "win32",
   "arch": "x64",
