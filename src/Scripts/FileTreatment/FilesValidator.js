@@ -1,9 +1,9 @@
 // Node Modules
-const { mkdirSync, existsSync, writeFileSync } = require('node:fs');
+const { mkdirSync, existsSync, writeFileSync, copyFileSync } = require('node:fs');
 const { join } = require('node:path');
 
 class FilesValidator {
-    CreatePKGFile(RollOutPath, { RollOut, Replacing_files_affected }) {
+    CreatePackageFiles(RollOutPath, { RollOut, Replacing_files_affected }, fixRoute) {
         let getMainFolderPackage = RollOutPath.split('\\'),
             getMainNameDirectory = getMainFolderPackage[getMainFolderPackage.length - 1],
             ReturnStringDataRouter = `${RollOutPath}\\${getMainNameDirectory.toUpperCase()}`;
@@ -11,6 +11,16 @@ class FilesValidator {
         writeFileSync(
             ReturnStringDataRouter,
             `${RollOut}${Replacing_files_affected}`
+        );
+
+        copyFileSync(
+            fixRoute(join(__dirname, '../../Resources/create_c_makefiles.pl')),
+            fixRoute(join(RollOutPath, 'create_c_makefiles.pl'))
+        );
+
+        copyFileSync(
+            fixRoute(join(__dirname, '../../Resources/rollout.pl')),
+            fixRoute(join(RollOutPath, 'rollout.pl'))
         );
     }
     CreateDirectorysFiles(JSONArray, RollOutPath) {

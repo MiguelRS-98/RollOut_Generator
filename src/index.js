@@ -7,7 +7,7 @@ const { join } = require('node:path');
 
 // Local Modules
 const { Startup } = require('./Startup');
-const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, FilesValidator, AutoUpdaterApp } = require('./Scripts/ExportScripts');
+const { GlobalShortcuts, EventsProcess, MainProcess, FilesTratment, FilesValidator } = require('./Scripts/ExportScripts');
 
 //Imports<
 const { FilesDirectory, PoliciesDirectory } = require('./Resources/XMLDataDefault.json');
@@ -18,8 +18,8 @@ const { UserSettingsFileGenerator, UserSettingsFileDelete, UserSettingsFileReset
 const { registerShortcuts, unregisterShortcuts } = new GlobalShortcuts();
 const { ViewLocals, LoadXMLSettings, addPKGFileContent } = new EventsProcess();
 const { restartApplication } = new MainProcess();
-const { TransformXMLToJSON, SendFileToRollOutLocation, DeleteEmptyDirectories, SendFileToRollOutLocationJava } = new FilesTratment();
-const { ValidateFiles, TreatmentFilesRoutes, CreatePKGFile } = new FilesValidator();
+const { TransformXMLToJSON, SendFileToRollOutLocation, DeleteEmptyDirectories, SendFileToRollOutLocationJava, fixRoute } = new FilesTratment();
+const { ValidateFiles, TreatmentFilesRoutes, CreatePackageFiles } = new FilesValidator();
 
 // Procces Start
 __init__(FilesDirectory, PoliciesDirectory);
@@ -69,7 +69,7 @@ const createWindow = () => {
     webPreferences: {
       devTools: true,
       nodeIntegration: true,
-      preload: join(__dirname, 'Preloads/preload.js'),
+      preload: join(__dirname, 'Preloads/Preload.js'),
     }
   });
   // Set UserTask List
@@ -168,7 +168,7 @@ const createWindow = () => {
         webPreferences: {
           devTools: true,
           nodeIntegration: true,
-          preload: join(__dirname, 'Preloads/preloadRoute.js')
+          preload: join(__dirname, 'Preloads/PreloadRoute.js')
         }
       });
       child.setMaxListeners(20);
@@ -246,7 +246,7 @@ ipcMain.on(
   'UploadFiles',
   (event, { fileName, Java, fileLocation }) => {
     // PKG File Creation
-    CreatePKGFile(Settings.setDirectoryPackage, PKGFileBase)
+    CreatePackageFiles(Settings.setDirectoryPackage, PKGFileBase, fixRoute)
     // Definitions
     XMLRouter = TransformXMLToJSON(Settings.setDirectoryRoutes);
     CreateDirRouter = ValidateFiles(JSON.parse(XMLRouter), Settings.setDirectoryPackage);
