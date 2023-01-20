@@ -1,14 +1,14 @@
 {
   "name": "rollout_generator",
   "productName": "RollOut Generator",
-  "version": "1.9.6",
+  "version": "1.9.7",
   "description": "Generador de carpetas y archivos para RollOuts",
   "main": "src/index.js",
   "type": "commonjs",
   "build": {
     "appId": "netlogistik.com",
     "productName": "RollOut_Generator",
-    "icon": "C:/Move_Files/src/Resources/MoveFiles_Icon.ico",
+    "icon": "C:/Move_Files/src/Resources/MoveFiles_Icon.png",
     "publish": [
       {
         "provider": "github",
