@@ -187,7 +187,7 @@ app.disableHardwareAcceleration();
 app.on('ready', () => {
   registerShortcuts('CommandOrControl+R');
   createWindow();
-  autoUpdater.checkForUpdates();
+  autoUpdater.checkForUpdatesAndNotify();
 });
 // When the app is Quit throw message
 app.on('quit', () => {
