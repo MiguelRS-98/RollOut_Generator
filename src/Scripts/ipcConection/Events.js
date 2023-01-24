@@ -1,4 +1,5 @@
 // Node Modules2
+const { Notification } = require('electron');
 const { exec } = require('node:child_process');
 const { copyFile, writeFileSync, appendFileSync } = require('node:fs');
 const { homedir } = require('node:os');
@@ -106,6 +107,11 @@ class EventsProcess {
                 })
             },
             COMPLETE: () => {
+                new Notification({
+                    title: 'RollOut Generado',
+                    body: 'El RollOut se genero exitosamente',
+                    icon: `${join(__dirname, '../../Resources/MoveFiles_Icon.png')}`,
+                }).show()
                 appendFileSync(
                     ReturnStringDataRouter,
                     `\n\n# Rebuilding C makefiles if necessary\n\n# Perform any environment rebuilds if necessary.\nMBUILD\n\n# End of the Script `

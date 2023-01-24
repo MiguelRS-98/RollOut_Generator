@@ -1,5 +1,5 @@
 // Node Modules
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Notification } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const { info, transports } = require('electron-log');
 const { homedir } = require('os');
@@ -295,6 +295,17 @@ ipcMain.on('Restart', () => {
     directoryPackage: require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json')).directoryPackage,
     directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\CUSTOM\\Router.xml'),
     directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\CUSTOM\\Policies.xml')
+  });
+  restartApplication();
+});
+// -------------------------------------------------- // -------------------------------------------------- //
+ipcMain.on('ReturnConfig', () => {
+  UserSettingsFileGenerator({
+    status: true,
+    XMLConfig: true,
+    directoryPackage: require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json')).directoryPackage,
+    directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Router.xml'),
+    directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
   });
   restartApplication();
 });

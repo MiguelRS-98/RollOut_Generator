@@ -90,3 +90,9 @@ function UploadXMLFiles() {
         window.setXML.Restart();
     }
 }
+
+const cancelButton = document.getElementById('filesSettingsButton5');
+
+cancelButton.addEventListener('click', () => {
+    window.setXML.Cancelar();
+})

@@ -10,11 +10,15 @@ function loadXML(XMLFilePath, Identify){
 function Restart() {
     ipcRenderer.send('Restart')
 }
+function Cancelar() {
+    ipcRenderer.send('ReturnConfig')
+}
 
 contextBridge.exposeInMainWorld(
     'setXML',
     {
         loadXML,
-        Restart
+        Restart,
+        Cancelar
     }
 )

@@ -107,7 +107,8 @@
 
   #filesSettingsButton1,
   #filesSettingsButton2,
-  #filesSettingsButton3 {
+  #filesSettingsButton3,
+  #filesSettingsButton5 {
     width: 230px;
     height: 50px;
     border: 3px solid var(--border);
@@ -130,7 +131,8 @@
 
   #filesSettingsButton2:hover,
   #filesSettingsButton3:hover,
-  #filesSettingsButton4:hover {
+  #filesSettingsButton4:hover,
+  #filesSettingsButton5:hover {
     background-color: var(--textWhite);
     color: var(--backgroundInputs);
     font-size: large;
