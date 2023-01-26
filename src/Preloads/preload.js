@@ -25,8 +25,30 @@ function getFiles(Name, Path, JavaTreatment) {
 function deleteDirectories() {
     ipcRenderer.send('DeleteDirectories');
 }
-function RollOutCreation(){
+function RollOutCreation() {
     ipcRenderer.send('UploadDataToPKGFile')
+}
+function loadXML(XMLFilePath, Identify) {
+    let Data = {
+        Path: XMLFilePath,
+        Type: Identify
+    }
+    ipcRenderer.send('SendXMLFiles', Data)
+}
+function Restart() {
+    ipcRenderer.send('Restart')
+}
+function Cancelar() {
+    ipcRenderer.send('ReturnConfig')
+}
+function UpdateRouteSystem(inputRouteData) {
+    ipcRenderer.send('UpdateRouteSystem', inputRouteData)
+}
+function GetPathSettings_Data(params) {
+    ipcRenderer.send('getData-PathRollOut')
+    ipcRenderer.on('sendData-PathRollOut', (e, data) => {
+        params(e, data)
+    })
 }
 
 contextBridge.exposeInMainWorld(
@@ -37,6 +59,11 @@ contextBridge.exposeInMainWorld(
         SetXMLConfigFiles,
         getFiles,
         deleteDirectories,
-        RollOutCreation
+        RollOutCreation,
+        loadXML,
+        Restart,
+        Cancelar,
+        UpdateRouteSystem,
+        GetPathSettings_Data
     }
 );

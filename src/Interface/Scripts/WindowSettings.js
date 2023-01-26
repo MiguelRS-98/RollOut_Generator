@@ -1,28 +1,30 @@
 // Get DOM Elements
 const ButtonRoute = document.getElementById('ButtonRoute');
-const inputRoute = document.getElementById('inputRoute');
+const inputRoute = document.getElementById('desc-route');
 
 //Definitions
 let inputRouteData;
 
 // Function Of Main Process
 function UpdateConfig(){
-    window.setRoute.UpdateRouteSystem(inputRouteData);
+    window.main.UpdateRouteSystem(inputRouteData);
 };
 
-//Listener To Input Text For Get the Route To RollOut Send Files
-inputRoute.addEventListener('change', e => {
-    inputRouteData = e.target.value;
-});
 inputRoute.addEventListener('keypress', e => {
+    inputRouteData = e.target.value;
     if ( e.key === 'Enter') return UpdateConfig();
 });
 
-//Listener to Button Set Route to RollOut
-ButtonRoute.addEventListener('click', () => {
-    UpdateConfig();
-});
+async function getDataSettingsFile() {
+    await console.log('inicio');
+    await window.main.GetPathSettings_Data((e, data) => {
+        inputRoute.setAttribute('value', data)
+        if (data === 'Not Asigned') {
+            return inputRoute.removeAttribute('disabled')
+        }
+        return inputRoute.setAttribute('disabled','')
+    });
+    await console.log('fin');
+}
 
-document.addEventListener('keypress', e => {
-    if ( e.key === 'Enter') return UpdateConfig();
-});
+getDataSettingsFile();

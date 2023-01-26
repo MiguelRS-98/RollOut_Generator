@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>RollOut Generator</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../Styles/index.css">
+</head>
+
+<body>
+    <div id="loading-card">
+        <h1 id="loading-card-h1">
+            <div id="loader"></div>
+            Cargando
+        </h1>
+    </div>
+    <img src="./Resource/PKG-Final.png" alt="background-image" id="background-image">
+    <header>
+        <div id="header">
+            <div id="content-app">
+                <div class="content-app-sections" id="content-1">
+                    <div id="welcome-title">
+                        <h2>Bienvenido Usuario</h2>
+                    </div>
+                    <div id="app-title">
+                        <h2>ROLLOUT GENERATOR</h2>
+                    </div>
+                </div>
+                <hr>
+                <div class="content-app-sections" id="content-2">
+                    <a href="index.html">
+                        <button id="xml-settings" class="ordinary-button">
+                            <img src="./Resource/Settings-image.png" alt="xml-settings" id="settings-image" width="35px"
+                                height="35px">
+                        </button>
+                    </a>
+                    <button id="restart-routes" class="unique-button">
+                        <img src="./Resource/Repeat-image.png" alt="restart-button" id="rest-route-image" width="35px"
+                            height="35px">
+                    </button>
+                    <div id="route-section">
+                        <h3>Ruta: </h3>
+                        <input type="text" id="desc-route" class="input-state-enable" value="C:\Users\Joan Cardozoç\Desktop\Testing_RollOut">
+                    </div>
+                    <button id="open-folder-routes" class="ordinary-button">
+                        <img src="./Resource/Folder-image.png" alt="open-folder" id="open-folder-image" width="35px" height="35px">
+                    </button>
+                    <div id="mtf-section">
+                        <button id="mtf-spacer" class="button-state-desable">
+                            <div id="mtf-button" class="ordinary-button">
+                                <h3>MTF</h3>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="icon-app">
+                <img src="./Resource/PKG-Final.png" alt="x-icon-app" width="170px" height="170px">
+            </div>
+        </div>
+    </header>
+    <main>
+        <div id="drop-files">
+            <div id="drop-files-content">
+                <img src="./Resource/Files_image.png" alt="drop-files" id="files-image" width="80px" height="80px">
+                <h1 id="text-files">Suelta tus archivos</h1>
+                <input type="file" name="files" id="inputFiles1" multiple hidden />
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div id="footer-content">
+            <h3>NETLOGISTIK S.A.S | COLOMBIA | 2023</h3>
+        </div>
+    </footer>
+    <script src="../Scripts/index.js"></script>
+    <script src="../Scripts/WindowSettings.js"></script>
+</body>
+
+</html>

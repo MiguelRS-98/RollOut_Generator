@@ -1,176 +1,312 @@
-  :root {
-    --border: #005050;
-    --outBorder: #ffffff;
-    --backgroundInputs: #0059ff;
-    --lowBackground: #82aaff;
-    --borderRadius-general: 10px;
-    --textWhite: #ffffff;
-    --textBlack: #000000;
-    --Wrong: #ff000080;
-    --Pass: #00ff0080;
-    --gray: #00000030;
-    --Exit: #ff0000;
-    --Check: #00ff00;
-  }
+/* ------------------- Variables ------------------- */
+:root {
+    --net-orange: rgb(255, 103, 29);
+    --net-blue: rgb(0, 38, 58);
+    --app-grey: rgb(180, 180, 180);
+    --app-grey-t: #00000040;
+    --app-background: #ffffff;
+    --text-white: #ffffff;
+    --text-black: #000000;
+    --files-area_event: #00d9ff90;
+}
 
-  html {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+/* ------------------- Global ------------------- */
 
-  body {
-    margin: 0;
+body {
+    overflow: hidden;
+    margin: 0px;
+    font: bold;
+    font-family: 'cascadia code';
     width: 100%;
-    min-height: 90vh;
+    height: 100vh;
+    background-color: var(--app-background);
+}
+
+header {
+    width: 100%;
+    height: 28%;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+#drop-files-routes.active,
+#drop-files-csv.active,
+#drop-files.active {
+    border: dashed 2px var(--text-black);
+    background-color: var(--files-area_event);
+}
+
+/* ------------------- Keyframes ------------------- */
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#loader,
+#loader-xml {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite;
+    background: linear-gradient(to top, var(--net-orange), var(--net-blue));
+}
+
+#loader::before,
+#loader-xml::before {
+    content: '';
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    background-color: var(--app-background);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* ------------------- Definitions ------------------- */
+header,
+#content-app {
     display: flex;
-    text-align: center;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-  }
+}
 
-  main,
-  #filesArea1,
-  #filesArea2,
-  #filesArea3 {
-    display: flex;
-    text-align: center;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 15px;
-  }
-
-  main {
-    width: 95%;
-    flex-direction: row;
-  }
-
-  header {
-    width: 95%;
+#header,
+#content-2,
+#mtf-spacer,
+#desc-route,
+#route-section,
+#main-settings,
+#drop-files-content,
+#slide-content-titles,
+.content-app-sections,
+#drop-files-csv-content,
+#drop-files-routes-content {
     display: flex;
     flex-direction: row;
+}
+
+#route-section,
+#slide-content-titles {
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+main,
+footer,
+#icon-app,
+#app-title,
+#drop-files,
+#mtf-section,
+#loading-card,
+#welcome-title,
+.unique-button,
+ordinary-button,
+#drop-files-csv,
+.ordinary-button,
+#loading-card-h1,
+#loading-card-xml,
+#drop-files-csv-content,
+#drop-files-routes-content,
+#loading-card-h1-xml,
+#drop-files-routes {
+    display: grid;
+    place-items: center;
+}
+
+/* ------------------- Styles ------------------- */
+#content-app {
+    width: 80%;
+}
+
+#content-1 {
+    margin: 35px 0 0 0;
+}
+
+#content-2 {
     justify-content: space-around;
+    margin: 15px 0 0 0;
+}
+
+.content-app-sections {
     align-items: center;
-  }
-
-  code {
-    background-color: var(--gray);
-    border-radius: 5px;
-  }
-
-  #filesArea1 {
-    padding: 15px;
     width: 100%;
-    height: 300px;
-    border-radius: var(--borderRadius-general);
-  }
+}
 
-  #filesArea2,
-  #filesArea3 {
-    padding: 45px;
-    width: 100%;
-    min-height: 200px;
-    max-height: 900px;
-    border-radius: var(--borderRadius-general);
-  }
+#app-title {
+    width: 60%;
+}
 
-  #filesJavaSwitch {
-    display: flex;
-    text-align: center;
+#welcome-title {
+    width: 40%;
+    color: var(--text-white);
+    border-radius: 0 100px 0 0;
+    background-color: var(--net-orange);
+}
+
+#content-app hr {
+    margin: 0;
+    width: 99%;
+    border: 5px solid #000;
+    border-radius: 0 5px 5px 0;
+}
+
+#icon-app {
+    width: 20%;
+    height: 100%;
+}
+
+.unique-button,
+.ordinary-button {
+    margin: 0;
+    padding: 0;
+    width: 100px;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    color: var(--text-white);
+}
+
+.ordinary-button {
+    background-color: var(--net-blue);
+}
+
+.ordinary-button>h3 {
+    margin: 0;
+}
+
+.unique-button {
+    background-color: var(--net-orange);
+}
+
+#route-section {
     align-items: center;
-    justify-content: center;
-    height: 50px;
-    width: 100px;
-    border: 3px solid var(--border);
-    color: var(--textWhite);
-    font-size: large;
-    animation: all 1s ease;
-    margin: 0;
-    border-radius: var(--borderRadius-general);
-  }
+    width: 30%;
+}
 
-  #filesJavaSwitchText {
-    text-align: center;
+#desc-route {
+    width: 50%;
+    height: 20px;
+    border-radius: 20px;
+    padding: 0 20px;
+    caret-color: var(--net-orange);
+}
+
+#mtf-section {
+    width: 20%;
+}
+
+#mtf-spacer {
+    padding: 0;
+    width: 135px;
+    border-radius: 25px;
+    border: 2px solid var(--text-black);
+}
+
+#mtf-button {
+    width: 65%;
+}
+
+.button-state-desable,
+.button-state-enable {
+    transition: all .2s ease;
+}
+
+.input-state-desable {
+    background-color: var(--app-grey);
+}
+
+.input-state-enable {
+    background-color: var(--app-background);
+}
+
+.button-state-desable {
+    background-color: var(--app-grey);
+    justify-content: flex-start;
+}
+
+.button-state-enable {
+    background-color: var(--net-orange);
+    justify-content: flex-end;
+}
+
+/* ------------------- Main Section ------------------- */
+main {
+    position: relative;
     width: 100%;
-    margin: 0;
-  }
+    min-width: 30%;
+    height: 55%;
+    padding: 20px 0;
+}
 
-  .MTFActive {
-    background: var(--Pass);
-  }
+#drop-files {
+    width: 95%;
+    height: 100%;
+    border-radius: 20px;
+    border: dashed 2px var(--text-black);
+    background-color: var(--app-grey);
+}
 
-  .MTFDesactive {
-    background: var(--Wrong);
-  }
+footer {
+    width: 100%;
+    height: 5%;
+}
 
-  #filesSettingsButton1,
-  #filesSettingsButton2,
-  #filesSettingsButton3,
-  #filesSettingsButton5 {
-    width: 230px;
-    height: 50px;
-    border: 3px solid var(--border);
-    background-color: var(--backgroundInputs);
-    color: var(--textWhite);
-    font-size: large;
-    border-radius: var(--borderRadius-general);
-    animation: all 1s ease;
-  }
+#background-image {
+    z-index: -5;
+    position: absolute;
+    filter: opacity(0.1);
+    transform: rotate(35deg) translate(-90px, 90px) scale(1.1);
+}
 
-  #filesSettingsButton4 {
-    width: 100px;
-    height: 50px;
-    border: 3px solid var(--border);
-    color: var(--textWhite);
-    font-size: large;
-    border-radius: var(--borderRadius-general);
-    animation: all 1s ease;
-  }
+/* ------------------- Events Styles ------------------- */
+.on {
+    color: var(--text-black);
+    border: 2px solid var(--text-black);
+    background-color: var(--app-background);
+}
 
-  #filesSettingsButton2:hover,
-  #filesSettingsButton3:hover,
-  #filesSettingsButton4:hover,
-  #filesSettingsButton5:hover {
-    background-color: var(--textWhite);
-    color: var(--backgroundInputs);
-    font-size: large;
-    border-radius: var(--borderRadius-general);
-    animation: all 1s ease;
-  }
+#loading-card,
+#loading-card-xml {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--app-grey-t);
+}
 
-  #filesSettingsButton1:hover {
-    background-color: var(--Exit);
-    color: var(--outBorder);
-    font-size: large;
-    border-radius: var(--borderRadius-general);
-    animation: all 1s ease;
-  }
+#loading-card-h1,
+#loading-card-h1-xml {
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    border: 2px solid var(--text-black);
+    background-color: var(--app-background);
+}
 
-  .inactive {
-    border: dashed 5px var(--border);
-  }
+.show {
+    z-index: 1000;
+    opacity: 1;
+}
 
-  .active {
-    border: dashed 5px var(--outBorder);
-    background-color: var(--lowBackground);
-  }
+.unshow {
+    z-index: -1000;
+    opacity: 0;
+}
 
-  .checkwrong {
-    background-color: var(--Wrong);
-  }
-
-  .checkpass {
-    background-color: var(--Pass);
-  }
-
-  .MTFDesactive {
-    color: var(--textWhite);
-    background-color: var(--Exit);
-  }
-
-  .MTFActive {
-    color: var(--textBlack);
-    background-color: var(--Check);
-  }
+@media screen and (max-width: 1130px) {
+    #drop-files-csv-content,
+    #drop-files-routes-content {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+}

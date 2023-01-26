@@ -1,28 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <title>RollOut Generator</title>
-  <link rel="stylesheet" href="../Styles/index.css" />
-  <link rel="shortcut icon" href="../../Resources/NetLogistiK.jpeg" type="image/x-icon">
+    <title>RollOut Generator | Configuracion</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="../Styles/config.css">
+    <link type="text/css" rel="stylesheet" href="../Styles/index.css">
 </head>
 
 <body>
-  <h1>Bienvenido Usuario&nbsp;&nbsp;&nbsp;<code>&nbsp;Control&nbsp;</code>&nbsp;+&nbsp;<code>&nbsp;R&nbsp;</code> Para reiniciar</h1>
-  <header>
-    <button id="filesSettingsButton1">Reiniciar Configuracion</button>
-    <button id="filesSettingsButton2">Ver Locales</button>
-    <button id="filesSettingsButton3">Definir Configuracion</button>
-    <button id="filesSettingsButton4" class="MTFDesactive">MTF</button>
-  </header>
-  <main>
-    <div id="filesArea1" class="inactive">
-      <h1 class="filesAreaText1">Sube los archivos</h1>
-      <input type="file" name="files" id="inputFiles1" multiple hidden />
+    <div id="loading-card-xml" class="unshow">
+        <h1 id="loading-card-h1-xml">
+            <div id="loader-xml"></div>
+            Cargando<br />Configuracion
+        </h1>
     </div>
-  </main>
-  <script src="../Scripts/index.js"></script>
+    <img src="./Resource/PKG-Final.png" alt="background-image" id="background-image">
+    <header>
+        <div id="header">
+            <div id="content-app">
+                <div class="content-app-sections" id="content-1">
+                    <div id="welcome-title">
+                        <h2>Bienvenido Usuario</h2>
+                    </div>
+                    <div id="app-title">
+                        <h2>ROLLOUT GENERATOR</h2>
+                    </div>
+                </div>
+                <hr>
+                <div class="content-app-sections" id="content-2">
+                    <div id="slide-content">
+                        <div id="slide-content-titles">
+                            <h1>RUTAS</h1>
+                            <h1>TABLAS</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="icon-app">
+                <img src="./Resource/PKG-Final.png" alt="x-icon-app" width="170px" height="170px">
+            </div>
+        </div>
+    </header>
+    <main id="main-settings">
+        <div id="drop-files-routes">
+            <div id="drop-files-routes-content">
+                <img src="./Resource/Files_image.png" alt="drop-files-routes" id="files-routes-image" width="80px"
+                    height="80px">
+                <h1 id="text-1">Suelta tus archivos</h1>
+                <input type="file" name="filesXMLPolicies" id="inputFiles2" multiple hidden />
+            </div>
+        </div>
+        <div id="drop-files-button-cancel">
+            <a href="main.html">
+                <button id="cancel-settings" class="unique-button">
+                    <h2>Cancelar</h2>
+                </button>
+            </a>
+        </div>
+        <div id="drop-files-csv">
+            <div id="drop-files-csv-content">
+                <img src="./Resource/Files_image.png" alt="drop-files-csv" id="files-csv-image" width="80px"
+                    height="80px">
+                <h1 id="text-2">Suelta tus archivos</h1>
+                <input type="file" name="filesXMLPolicies" id="inputFiles3" multiple hidden />
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div id="footer-content">
+            <h3>NETLOGISTIK S.A.S | COLOMBIA | 2023</h3>
+        </div>
+    </footer>
+    <script src="../Scripts/config.js"></script>
 </body>
 
 </html>

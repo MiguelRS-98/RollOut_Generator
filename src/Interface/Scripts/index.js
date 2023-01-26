@@ -1,19 +1,67 @@
-// Get DOM Elements
-const filesSettingsButton1 = document.getElementById('filesSettingsButton1');
-const filesSettingsButton2 = document.getElementById('filesSettingsButton2');
-const filesSettingsButton3 = document.getElementById('filesSettingsButton3');
-const filesSettingsButton4 = document.getElementById('filesSettingsButton4');
-const filesJavaSwitch = document.getElementById('filesJavaSwitch');
+//Definitions
+const loading_card = document.getElementById('loading-card');
+const loading_card_h1 = document.getElementById('loading-card-h1');
+const mtf_switch = document.getElementById('mtf-spacer');
+const xml_settings = document.getElementById('xml-settings');
+const restart_routes = document.getElementById('restart-routes');
+const open_folder_routes = document.getElementById('open-folder-routes');
 
 //Dependencies
 let State_MTF = 'class';
 
-//Drop & Drop to Command Files
+//Events
+window.addEventListener('load', (e) => {
+    loading_card.classList.add('show');
+    loading_card.classList.remove('unshow');
+    if (e.isTrusted) {
+        setTimeout(async () => {
+            loading_card.classList.add('unshow');
+            loading_card.classList.remove('show');
+        }, 3000);
+    }
+});
+
+mtf_switch.addEventListener('click', () => {
+    if (mtf_switch.classList.contains('button-state-desable') && State_MTF === 'class') {
+        mtf_switch.classList.add('button-state-enable');
+        mtf_switch.classList.remove('button-state-desable');
+        State_MTF = 'mtf'
+        console.log(State_MTF);
+        return;
+    }
+    mtf_switch.classList.add('button-state-desable');
+    mtf_switch.classList.remove('button-state-enable');
+    State_MTF = 'class'
+    console.log(State_MTF);
+    return;
+})
+
+xml_settings.addEventListener('click', () => {
+    xml_settings.classList.add('on');
+    console.log('boton de configuracion');
+    setTimeout(() => {
+        xml_settings.classList.remove('on');
+    }, 50)
+})
+restart_routes.addEventListener('click', () => {
+    restart_routes.classList.add('on');
+    console.log('boton de reinicio');
+    setTimeout(() => {
+        restart_routes.classList.remove('on');
+    }, 50)
+})
+open_folder_routes.addEventListener('click', () => {
+    open_folder_routes.classList.add('on');
+    console.log('boton de locales');
+    setTimeout(() => {
+        open_folder_routes.classList.remove('on');
+    }, 50)
+})
 
 //DOM Elements
 const inputFiles = document.getElementById('inputFiles1');
-const filesArea = document.querySelector('#filesArea1');
-const filesAreaText = document.querySelector('.filesAreaText1');
+const filesArea = document.getElementById('drop-files');
+const filesAreaText = document.getElementById('text-files');
 
 //Data variables
 let files;
@@ -27,19 +75,18 @@ filesArea.addEventListener('dragover', e => {
 filesArea.addEventListener('dragleave', e => {
     e.preventDefault();
     filesArea.classList.remove('active');
-    filesAreaText.textContent = 'Sube los archivos';
+    filesAreaText.textContent = 'Suelta tus archivos';
 })
 filesArea.addEventListener('drop', e => {
     e.preventDefault();
     files = e.dataTransfer.files;
     retrieveFiles(files);
     filesArea.classList.remove('active');
-    filesAreaText.textContent = 'Sube los archivos';
+    filesAreaText.textContent = 'Suelta tus archivos';
 })
 
 inputFiles.addEventListener('change', e => {
     files = this.files;
-    CallBackFiles();
     retrieveFiles(files);
 })
 
@@ -56,22 +103,7 @@ function processFiles(file) {
 }
 
 // Listener To Button Where The User Want Restore Config Of The App
-filesSettingsButton1.addEventListener('click', () => window.main.RestoreSettings());
+restart_routes.addEventListener('click', () => window.main.RestoreSettings());
 
 // Listener To Button Where Open The Local Files Of The App
-filesSettingsButton2.addEventListener('click', () => window.main.ViewLocals());
-
-// Listener To Button Where The User Want Create A Custom Config With XML Files
-filesSettingsButton3.addEventListener('click', () => window.main.SetXMLConfigFiles());
-
-filesSettingsButton4.addEventListener('click', () => {
-    if (filesSettingsButton4.className === 'MTFDesactive') {
-        State_MTF = 'mtf';
-        filesSettingsButton4.classList.remove('MTFDesactive');
-        filesSettingsButton4.classList.add('MTFActive');
-    }else if (filesSettingsButton4.className === 'MTFActive') {
-        State_MTF = 'class';
-        filesSettingsButton4.classList.remove('MTFActive');
-        filesSettingsButton4.classList.add('MTFDesactive');
-    };
-})
+open_folder_routes.addEventListener('click', () => window.main.ViewLocals());

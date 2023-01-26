@@ -1,0 +1,70 @@
+/* ------------------- Variables ------------------- */
+:root {
+    --net-orange: rgb(255, 103, 29);
+    --net-blue: rgb(0, 38, 58);
+    --app-grey: rgb(180, 180, 180);
+    --app-grey-t: #00000040;
+    --app-background: #ffffff;
+    --text-white: #ffffff;
+    --text-black: #000000;
+    --Wrong: #ff000080;
+    --Pass: #00ff0080;
+}
+
+#slide-content {
+    width: 100%;
+    align-items: center;
+    background-color: var(--net-blue);
+    border-radius: 0 20px 20px 0;
+    color: var(--text-white);
+}
+
+#slide-content h1 {
+    margin: 5px;
+}
+
+#slide-content-titles {
+    padding: 0 0 0 26%;
+    justify-content: space-between;
+}
+
+#main-settings {
+    justify-content: space-evenly;
+}
+
+#drop-files-csv,
+#drop-files-routes {
+    width: 40%;
+    height: 100%;
+    border-radius: 20px;
+    border: dashed 2px var(--text-black);
+    background-color: var(--app-grey);
+}
+
+#drop-files-csv-content,
+#drop-files-routes-content {
+    width: 80%;
+}
+
+#cancel-settings {
+    height: 80px;
+}
+
+#cancel-settings>h3 {
+    margin: 0;
+}
+
+#drop-files-routes.checkwrong,
+#drop-files-csv.checkpass {
+    background-color: var(--Wrong);
+}
+
+#drop-files-csv.checkpass,
+#drop-files-routes.checkpass {
+    background-color: var(--Pass);
+}
+
+#text-1,
+#text-2 {
+    text-align: center;
+}

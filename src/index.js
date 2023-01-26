@@ -60,11 +60,14 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     icon: join(__dirname, "Resources/MoveFiles_Icon.ico"),
     minWidth: 1000,
-    minHeight: 650,
+    minHeight: 720,
     width: 1000,
-    height: 650,
+    height: 720,
+    maxWidth: 1200,
+    maxHeight: 820,
+    maximizable: false,
     center: true,
-    resizable: false,
+    resizable: true,
     closable: true,
     webPreferences: {
       devTools: true,
@@ -116,68 +119,9 @@ const createWindow = () => {
   // Configs
   mainWindow.setTitle('NetLogistiK - MoveFiles')
   mainWindow.setMaxListeners(20);
-  mainWindow.setMenu(null);
+  //mainWindow.setMenu(null);
   // and load the index.html of the app.
-  mainWindow.loadFile(join(__dirname, '/Interface/Views/index.html'));
-  try {
-    if (Settings.setXMLConfig === false) {
-      const config = new BrowserWindow({
-        icon: join(__dirname, "Resources/MoveFiles_Icon.ico"),
-        parent: mainWindow,
-        width: 800,
-        height: 500,
-        resizable: false,
-        maxWidth: 800,
-        maxHeight: 500,
-        minimizable: false,
-        maximizable: false,
-        closable: false,
-        center: true,
-        modal: true,
-        webPreferences: {
-          devTools: true,
-          nodeIntegration: true,
-          preload: join(__dirname, 'Preloads/PreloadXML.js')
-        }
-      })
-      config.setMaxListeners(20);
-      config.setMenu(null);
-      config.loadFile(join(__dirname, 'Interface/Views/WindowXML.html'));
-    }
-  } catch (err) {
-    console.log('Throw JavaScript Node Exception To Create Settings Directory');
-  };
-  try {
-    // Check the user config in settings JSON file
-    if (!Settings.setStatus) {
-      // Create the Modal Window Settings Setter.
-      const child = new BrowserWindow({
-        icon: join(__dirname, "Resources/MoveFiles_Icon.ico"),
-        parent: mainWindow,
-        width: 400,
-        height: 400,
-        resizable: false,
-        maxWidth: 400,
-        maxHeight: 400,
-        minimizable: false,
-        maximizable: false,
-        closable: false,
-        center: true,
-        modal: true,
-        movable: true,
-        webPreferences: {
-          devTools: true,
-          nodeIntegration: true,
-          preload: join(__dirname, 'Preloads/PreloadRoute.js')
-        }
-      });
-      child.setMaxListeners(20);
-      child.setMenu(null);
-      child.loadFile(join(__dirname, '/Interface/Views/WindowSettings.html'));
-    }
-  } catch (err) {
-    console.log('Throw JavaScript Node Exception To Create Settings Directory');
-  };
+  mainWindow.loadFile(join(__dirname, '/Interface/Views/main.html'));
 };
 // Configuration App
 app.setAppLogsPath(join(homedir(), 'AppData\\Roaming\\.UserSettings\\AppLogs'));
@@ -222,6 +166,12 @@ ipcMain.on('RestoreSettingFile', () => {
   UserSettingsFileDelete();
   restartApplication();
 });
+// -------------------------------------------------- // -------------------------------------------------- //
+ipcMain.on('getData-PathRollOut', (e) => {
+  const { directoryPackage } = require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json'));
+
+  e.reply('sendData-PathRollOut', directoryPackage)
+})
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('SetXMLConfigFiles', () => {
   UserSettingsFileGenerator({

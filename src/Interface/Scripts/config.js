@@ -1,12 +1,42 @@
+//Definitions
+const loading_card = document.getElementById('loading-card-xml');
+const loading_card_h1 = document.getElementById('loading-card-h1-xml');
+const mtf_switch = document.getElementById('cancel-settings');
+
+let state = 0, Router, Policies;
+
+//Events
+function xml_submit_files_config() {
+    console.log('Verification XML Files');
+    if (state === 2) {
+        loading_card.classList.add('show');
+        loading_card.classList.remove('unshow');
+        setTimeout(() => {
+            loading_card.classList.add('unshow');
+            loading_card.classList.remove('show');
+            window.main.loadXML(Router, 'Router');
+            window.main.loadXML(Policies, 'Policies');
+            window.main.Restart();
+        }, 3000);
+    }
+};
+
+mtf_switch.addEventListener('click', () => {
+    mtf_switch.classList.add('on');
+    console.log('boton de configuracion');
+    setTimeout(() => {
+        mtf_switch.classList.remove('on');
+    }, 50)
+});
+
 // Dependencies
-let State_Number = 0, Router, Policies;
 
 //Drop & Drop to XML
 
 //DOM Elements
 const inputFilesXML = document.getElementById('inputFiles2');
-const filesAreaXML = document.querySelector('#filesArea2');
-const filesAreaTextXML = document.querySelector('.filesAreaText2');
+const filesAreaXML = document.getElementById('drop-files-routes');
+const filesAreaTextXML = document.getElementById('text-1');
 
 //Data variables
 let fileXML;
@@ -26,10 +56,10 @@ filesAreaXML.addEventListener('drop', e => {
     e.preventDefault();
     fileXML = e.dataTransfer.files;
     filesAreaXML.classList.remove('active');
-    if (fileXML[0].type === 'text/xml') {
+    if (fileXML[0].name.includes('.xml')) {
         filesAreaXML.classList.add('checkpass');
         Router = fileXML[0].path;
-        State_Number++
+        state++
         filesAreaTextXML.textContent = `Archivo ${fileXML[0].name} Cargado`;
     } else {
         filesAreaXML.classList.add('checkwrong');
@@ -46,8 +76,8 @@ inputFilesXML.addEventListener('change', e => {
 
 //DOM Elements
 const inputFilesPolicies = document.getElementById('inputFiles3');
-const filesAreaPolicies = document.querySelector('#filesArea3');
-const filesAreaTextPolicies = document.querySelector('.filesAreaText3');
+const filesAreaPolicies = document.getElementById('drop-files-csv');
+const filesAreaTextPolicies = document.getElementById('text-2')
 
 //Data variables
 let filePolicies;
@@ -67,10 +97,10 @@ filesAreaPolicies.addEventListener('drop', e => {
     e.preventDefault();
     filePolicies = e.dataTransfer.files;
     filesAreaPolicies.classList.remove('active');
-    if (filePolicies[0].type === 'text/xml' && State_Number === 1) {
+    if (filePolicies[0].name.includes('.xml') && state === 1) {
         filesAreaPolicies.classList.add('checkpass');
         Policies = filePolicies[0].path;
-        State_Number++
+        state++
         UploadXMLFiles();
         filesAreaTextPolicies.textContent = `Archivo ${filePolicies[0].name} Cargado`;
     } else {
@@ -84,15 +114,13 @@ inputFilesPolicies.addEventListener('change', e => {
 })
 
 function UploadXMLFiles() {
-    if (State_Number === 2) {
-        window.setXML.loadXML(Router, 'Router');
-        window.setXML.loadXML(Policies, 'Policies');
-        window.setXML.Restart();
+    if (state === 2) {
+        xml_submit_files_config();
     }
 }
 
 const cancelButton = document.getElementById('filesSettingsButton5');
 
-cancelButton.addEventListener('click', () => {
-    window.setXML.Cancelar();
+mtf_switch.addEventListener('click', () => {
+    window.main.Cancelar();
 })
