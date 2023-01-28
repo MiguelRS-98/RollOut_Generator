@@ -5,9 +5,13 @@ const mtf_switch = document.getElementById('mtf-spacer');
 const xml_settings = document.getElementById('xml-settings');
 const restart_routes = document.getElementById('restart-routes');
 const open_folder_routes = document.getElementById('open-folder-routes');
+const button_confimation = document.getElementById('strict-confirmation');
+const files_viewer = document.getElementById('files-viewer');
+const files_viewer_content = document.getElementById('files-viewer-content');
+const file_button = document.getElementsByClassName('file-button');
 
 //Dependencies
-let State_MTF = 'class';
+let State_MTF = 'class', files, filesDataArray = [];
 
 //Events
 window.addEventListener('load', (e) => {
@@ -63,9 +67,6 @@ const inputFiles = document.getElementById('inputFiles1');
 const filesArea = document.getElementById('drop-files');
 const filesAreaText = document.getElementById('text-files');
 
-//Data variables
-let files;
-
 //DragOver and inner
 filesArea.addEventListener('dragover', e => {
     e.preventDefault();
@@ -80,15 +81,91 @@ filesArea.addEventListener('dragleave', e => {
 filesArea.addEventListener('drop', e => {
     e.preventDefault();
     files = e.dataTransfer.files;
-    retrieveFiles(files);
+    filesViwer(files)
     filesArea.classList.remove('active');
     filesAreaText.textContent = 'Suelta tus archivos';
 })
 
 inputFiles.addEventListener('change', e => {
     files = this.files;
-    retrieveFiles(files);
 })
+
+// Listener To Button Where The User Want Restore Config Of The App
+restart_routes.addEventListener('click', () => window.main.RestoreSettings());
+
+// Listener To Button Where Open The Local Files Of The App
+open_folder_routes.addEventListener('click', () => window.main.ViewLocals());
+
+button_confimation.addEventListener('click', () => {
+    filesViewerState('on');
+    retrieveFiles(filesDataArray)
+})
+
+files_viewer_content.addEventListener('click', e => {
+    let data = e.target.attributes.value.value;
+    if (e.target.tagName === 'IMG' || e.target.tagName === 'BUTTON') {
+        deleteFilesPrepared(data)
+    }
+})
+
+// Functions
+
+function filesViewerState(data) {
+    if (data === 'off') {
+        filesArea.classList.add('viewFiles-off');
+        files_viewer.classList.remove('viewFiles-off');
+        return;
+    }
+    filesArea.classList.remove('viewFiles-off');
+    files_viewer.classList.add('viewFiles-off');
+    return;
+}
+
+function filesViwer(files) {
+    for (let i = 0; i < files.length; i++) {
+        const { name, size, path } = files[i];
+        filesDataArray.push({ name, size, path });
+    }
+    filesViewerState('off');
+    renderFiles(filesDataArray);
+}
+
+function deleteFilesPrepared(value) {
+    let result = [];
+    for (let i = 0; i < filesDataArray.length; i++) {
+        if (filesDataArray[i].name !== value) {
+            const { name, size, path } = filesDataArray[i];
+            result.push({ name, size, path })
+        }
+    }
+    filesDataArray = result;
+    renderFiles(filesDataArray);
+}
+
+function renderFiles(files) {
+    if (filesDataArray.length === 0) {
+        filesViewerState('on');
+        return;
+    }
+    files_viewer_content.innerHTML = '';
+    for (let i = 0; i < filesDataArray.length; i++) {
+        files_viewer_content.innerHTML += `
+        <div class="files-content">
+            <div class="files-content-data">
+                <div class="file-name">
+                    ${filesDataArray[i].name}
+                </div>
+                <div class="file-size">
+                    ${filesDataArray[i].size} bytes
+                </div>
+                <button class="file-button unique-button" value="${filesDataArray[i].name}">
+                    <img src="./Resource/Recicle-inage.png" alt="delete files" width="30px" height="30px" value="${filesDataArray[i].name}">
+                </button>
+            </div>
+        </div>
+        `;
+    }
+}
 
 function retrieveFiles(files) {
     for (let file of files) {
@@ -101,9 +178,3 @@ function retrieveFiles(files) {
 function processFiles(file) {
     window.main.getFiles(file.name, file.path, State_MTF);
 }
-
-// Listener To Button Where The User Want Restore Config Of The App
-restart_routes.addEventListener('click', () => window.main.RestoreSettings());
-
-// Listener To Button Where Open The Local Files Of The App
-open_folder_routes.addEventListener('click', () => window.main.ViewLocals());

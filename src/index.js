@@ -41,6 +41,9 @@ let FileRouter,
     setXMLConfig: undefined
   };
 
+// Window
+let mainWindow;
+
 /**
  * UserSettings --> Data from this JSON file
  */
@@ -57,7 +60,7 @@ try {
 //Main Process
 const createWindow = () => {
   // Create the Main Window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     icon: join(__dirname, "Resources/MoveFiles_Icon.ico"),
     minWidth: 1000,
     minHeight: 720,
@@ -219,12 +222,15 @@ ipcMain.on(
       // Execution
       SendFileToRollOutLocation(ResponceMethod, FileRouter, fileLocation, fileName, Settings.setDirectoryPackage);
     };
+    mainWindow.setProgressBar(0.3)
   }
 );
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('UploadDataToPKGFile', () => {
   addPKGFileContent(Settings.setDirectoryPackage, ResponceMethod);
   ResponceMethod = [];
+  mainWindow.setProgressBar(1.0)
+  mainWindow.setProgressBar(0.0)
 })
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('DeleteDirectories', () => {
@@ -232,6 +238,7 @@ ipcMain.on('DeleteDirectories', () => {
     for (let index = 0; index < 30; index++) {
       DeleteEmptyDirectories(FileRouter, Settings.setDirectoryPackage);
       DeleteEmptyDirectories(FilePolicies, Settings.setDirectoryPackage);
+      mainWindow.setProgressBar(0.6)
     }
   } catch (err) {
     return;

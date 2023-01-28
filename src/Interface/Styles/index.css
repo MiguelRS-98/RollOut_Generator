@@ -10,6 +10,17 @@
     --files-area_event: #00d9ff90;
 }
 
+/* ------------------- Webkit ------------------- */
+
+::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background-color: var(--net-blue);
+}
+
+::-webkit-scrollbar {
+    border-left: solid 2px var(--text-black);
+}
+
 /* ------------------- Global ------------------- */
 
 body {
@@ -25,6 +36,10 @@ body {
 header {
     width: 100%;
     height: 28%;
+}
+
+main {
+    overflow: hidden;
 }
 
 button {
@@ -86,6 +101,7 @@ header,
 #desc-route,
 #route-section,
 #main-settings,
+.files-content-data,
 #drop-files-content,
 #slide-content-titles,
 .content-app-sections,
@@ -115,6 +131,8 @@ ordinary-button,
 .ordinary-button,
 #loading-card-h1,
 #loading-card-xml,
+#files-viewer-button,
+#strict-confirmation,
 #drop-files-csv-content,
 #drop-files-routes-content,
 #loading-card-h1-xml,
@@ -302,7 +320,72 @@ footer {
     opacity: 0;
 }
 
+.viewFiles-off {
+    height: 0;
+    position: absolute;
+    visibility: hidden;
+}
+
+#files-viewer-content {
+    padding-top: 10px;
+    width: 100%;
+    height: 80%;
+    overflow: hidden;
+    overflow-y: auto;
+}
+#files-viewer {
+    width: 90%;
+    height: 360px;
+    border-radius: 20px;
+    border: dashed 2px var(--text-black);
+    background-color: var(--app-grey);
+}
+
+#files-viewer-button {
+    border-top: solid 2px var(--text-black);
+    width: 100%;
+    height: 17%;
+}
+
+#strict-confirmation {
+    width: 50%;
+    align-content: center;
+}
+
+.files-content-data {
+    padding: 0 0 0 10px;
+    width: 90%;
+    justify-content: space-between;
+    border-left: solid 5px var(--text-black);
+}
+
+.files-content {
+    margin-bottom: 10px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.file-name {
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.file-size {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-button {
+    width: 10%;
+}
+
 @media screen and (max-width: 1130px) {
+
     #drop-files-csv-content,
     #drop-files-routes-content {
         align-items: center;

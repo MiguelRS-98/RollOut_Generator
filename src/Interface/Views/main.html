@@ -32,17 +32,15 @@
                 <div class="content-app-sections" id="content-2">
                     <a href="index.html">
                         <button id="xml-settings" class="ordinary-button">
-                            <img src="./Resource/Settings-image.png" alt="xml-settings" id="settings-image" width="35px"
-                                height="35px">
+                            <img src="./Resource/Settings-image.png" alt="xml-settings" id="settings-image" width="35px" height="35px">
                         </button>
                     </a>
                     <button id="restart-routes" class="unique-button">
-                        <img src="./Resource/Repeat-image.png" alt="restart-button" id="rest-route-image" width="35px"
-                            height="35px">
+                        <img src="./Resource/Repeat-image.png" alt="restart-button" id="rest-route-image" width="35px" height="35px">
                     </button>
                     <div id="route-section">
                         <h3>Ruta: </h3>
-                        <input type="text" id="desc-route" class="input-state-enable" value="C:\Users\Joan Cardozoç\Desktop\Testing_RollOut">
+                        <input type="text" id="desc-route" class="input-state-enable" placeholder="Ingrese la ruta del RollOut">
                     </div>
                     <button id="open-folder-routes" class="ordinary-button">
                         <img src="./Resource/Folder-image.png" alt="open-folder" id="open-folder-image" width="35px" height="35px">
@@ -67,6 +65,16 @@
                 <img src="./Resource/Files_image.png" alt="drop-files" id="files-image" width="80px" height="80px">
                 <h1 id="text-files">Suelta tus archivos</h1>
                 <input type="file" name="files" id="inputFiles1" multiple hidden />
+            </div>
+        </div>
+        <div id="files-viewer" class="viewFiles-off">
+            <div id="files-viewer-content">
+
+            </div>
+            <div id="files-viewer-button">
+                <button id="strict-confirmation" class="unique-button">
+                    <h2>Generar RollOut</h2>
+                </button>
             </div>
         </div>
     </main>
