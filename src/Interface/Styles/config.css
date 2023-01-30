@@ -61,7 +61,7 @@
 
 #drop-files-csv.checkpass,
 #drop-files-routes.checkpass {
-    background-color: var(--Pass);
+    background-color: var(--net-orange);
 }
 
 #text-1,

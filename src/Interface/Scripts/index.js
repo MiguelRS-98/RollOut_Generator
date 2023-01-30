@@ -9,9 +9,12 @@ const button_confimation = document.getElementById('strict-confirmation');
 const files_viewer = document.getElementById('files-viewer');
 const files_viewer_content = document.getElementById('files-viewer-content');
 const file_button = document.getElementsByClassName('file-button');
+const search_folder = document.getElementById('search-folder');
+const ButtonRoute = document.getElementById('ButtonRoute');
+const inputRoute = document.getElementById('desc-route');
 
 //Dependencies
-let State_MTF = 'class', files, filesDataArray = [];
+let State_MTF = 'class', files, filesDataArray = [], inputRouteData, stateRoute = false;
 
 //Events
 window.addEventListener('load', (e) => {
@@ -79,11 +82,17 @@ filesArea.addEventListener('dragleave', e => {
     filesAreaText.textContent = 'Suelta tus archivos';
 })
 filesArea.addEventListener('drop', e => {
-    e.preventDefault();
-    files = e.dataTransfer.files;
-    filesViwer(files)
+    if (stateRoute) {
+        e.preventDefault();
+        files = e.dataTransfer.files;
+        filesViwer(files)
+        filesAreaText.textContent = 'Suelta tus archivos';
+        filesArea.classList.remove('active');
+        return;
+    }
+    filesAreaText.textContent = 'Define una ruta';
     filesArea.classList.remove('active');
-    filesAreaText.textContent = 'Suelta tus archivos';
+    return;
 })
 
 inputFiles.addEventListener('change', e => {
@@ -106,6 +115,15 @@ files_viewer_content.addEventListener('click', e => {
     if (e.target.tagName === 'IMG' || e.target.tagName === 'BUTTON') {
         deleteFilesPrepared(data)
     }
+})
+
+inputRoute.addEventListener('keypress', e => {
+    inputRouteData = e.target.value;
+    if (e.key === 'Enter') return UpdateConfig();
+});
+
+search_folder.addEventListener('click', () => {
+    window.main.search();
 })
 
 // Functions
@@ -178,3 +196,22 @@ function retrieveFiles(files) {
 function processFiles(file) {
     window.main.getFiles(file.name, file.path, State_MTF);
 }
+
+// Function Of Main Process
+function UpdateConfig() {
+    window.main.UpdateRouteSystem(inputRouteData);
+};
+
+async function getDataSettingsFile() {
+    await window.main.GetPathSettings_Data((e, data) => {
+        if (data === 'Not Asigned') {
+            stateRoute = false;
+            return inputRoute.removeAttribute('disabled')
+        }
+        stateRoute = true;
+        inputFiles.setAttribute('value', data)
+        return inputRoute.setAttribute('disabled', '')
+    });
+}
+
+getDataSettingsFile();

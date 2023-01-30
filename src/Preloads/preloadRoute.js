@@ -2,13 +2,16 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 // Function For Export to MainProcess
-function UpdateRouteSystem(inputRouteData) {
-    ipcRenderer.send('UpdateRouteSystem', inputRouteData)
+function getData(path, callback) {
+    ipcRenderer.send('getPathSystemData', path)
+    ipcRenderer.on('returnDataFolders', (e, data) => {
+        callback(data.data, data.path)
+    })
 }
 
 contextBridge.exposeInMainWorld(
-    "setRoute",
+    "folder",
     {
-        UpdateRouteSystem
+        getData
     }
 )

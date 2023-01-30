@@ -1,9 +1,10 @@
 // Node Modules
-const { app, BrowserWindow, ipcMain, dialog, Notification } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const { info, transports } = require('electron-log');
 const { homedir } = require('os');
 const { join } = require('node:path');
+const { readdirSync } = require('node:fs');
 
 // Local Modules
 const { Startup } = require('./Startup');
@@ -42,7 +43,7 @@ let FileRouter,
   };
 
 // Window
-let mainWindow;
+let mainWindow, folderWindow;
 
 /**
  * UserSettings --> Data from this JSON file
@@ -266,3 +267,35 @@ ipcMain.on('ReturnConfig', () => {
   });
   restartApplication();
 });
+// -------------------------------------------------- // -------------------------------------------------- //
+ipcMain.on('searchWindow', () => {
+  folderWindow = new BrowserWindow({
+    icon: join(__dirname, "Resources/MoveFiles_Icon.ico"),
+    parent: mainWindow,
+    width: 570,
+    height: 550,
+    resizable: false,
+    webPreferences: {
+      devTools: true,
+      nodeIntegration: true,
+      preload: join(__dirname, 'Preloads/preloadRoute.js'),
+    }
+  })
+  folderWindow.loadFile(join(__dirname, '/Interface/Views/folders.html'));
+})
+// -------------------------------------------------- // -------------------------------------------------- //
+ipcMain.on('getPathSystemData', (e, path) => {
+  let res_path = '', res_data = '', path_exits = '';
+  if (path === '') {
+    res_path = homedir();
+    res_data = readdirSync(homedir());
+    console.log(res_data, res_path, path_exits);
+    e.reply('returnDataFolders', { path: res_path || '', data: res_data });
+    return;
+  }
+  path_exits = path;
+  res_data = readdirSync(path_exits);
+  console.log(res_data, res_path, path_exits);
+  e.reply('returnDataFolders', { path: path_exits || '', data: res_data });
+  return;
+})

@@ -51,6 +51,10 @@ function GetPathSettings_Data(params) {
     })
 }
 
+function search() {
+    ipcRenderer.send('searchWindow')
+}
+
 contextBridge.exposeInMainWorld(
     'main',
     {
@@ -64,6 +68,7 @@ contextBridge.exposeInMainWorld(
         Restart,
         Cancelar,
         UpdateRouteSystem,
-        GetPathSettings_Data
+        GetPathSettings_Data,
+        search
     }
 );
