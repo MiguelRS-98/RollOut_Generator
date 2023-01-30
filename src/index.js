@@ -76,7 +76,7 @@ const createWindow = () => {
     webPreferences: {
       devTools: true,
       nodeIntegration: true,
-      preload: join(__dirname, 'Preloads/Preload.js'),
+      preload: join(__dirname, 'Preloads/preload.js'),
     }
   });
   // Set UserTask List
@@ -123,7 +123,7 @@ const createWindow = () => {
   // Configs
   mainWindow.setTitle('NetLogistiK - MoveFiles')
   mainWindow.setMaxListeners(20);
-  mainWindow.setMenu(null);
+  // mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/main.html'));
 };
@@ -285,7 +285,7 @@ ipcMain.on('searchWindow', () => {
       preload: join(__dirname, 'Preloads/preloadRoute.js'),
     }
   })
-  folderWindow.setMenu(null);
+  // folderWindow.setMenu(null);
   folderWindow.loadFile(join(__dirname, '/Interface/Views/folders.html'));
 })
 // -------------------------------------------------- // -------------------------------------------------- //
