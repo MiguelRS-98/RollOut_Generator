@@ -1,53 +1,63 @@
 const current_path = document.getElementById('current-path');
-const confirm = document.getElementById('confirm');
-const cancel = document.getElementById('cancel');
+const boton = document.getElementById('confirm-exit');
 const interface = document.getElementById('ui');
+const backward = document.getElementById('backward');
 
 // Definitions
-let path, routes_parts = [], content_path, state = true;
+let content_path, masterData = [];
 
-async function retrieveFolderData(path = '') {
-    await window.folder.getData(path, (data, path) => {
-        console.log(data);
-        routes_parts = [];
-        for (let i = 0; i < data.length; i++) {
-            if (!data[i].includes('.')) {
-                if (!data[i].includes(' ')) {
-                    routes_parts.push({
-                        folder: data[i]
-                    })
-                }
-            }
-        }
-        current_path.setAttribute('value', path)
-        content_path = path
-        viewFolders(routes_parts);
-    });
-}
-
-function viewFolders(array) {
-    console.log(array);
+function retrieveFolderData(data, path) {
+    masterData = data;
     interface.innerHTML = '';
-    for (let i = 0; i < array.length; i++) {
-        interface.innerHTML += `
-        <div class="folders" value="${array[i].folder}">
-            <img src="./Resource/Folder-image-2.png" alt="${array[i].folder}" value="${array[i].folder}" width="90px" height="90px">
-            <h4 value="${array[i].folder}">${array[i].folder}</h4>
-        </div>
-        `;
-    }
-    routes_parts = [];
+    data.map(name => {
+        if (!name.includes('.')) {
+            interface.innerHTML += `
+            <div class="folders">
+                <img src="./Resource/Folder-image-2.png" alt="${name}" value="${name}" width="90px" height="90px">
+                <h4>${name}</h4>
+            </div>
+            `;
+        }
+    })
+    content_path = path;
+    current_path.setAttribute('value', content_path);
+
+    console.log('retrieve Method');
 }
 
-interface.addEventListener('dblclick', (e) => {
-    let tag = e.target.tagName;
-    if (tag === 'DIV' || tag === 'IMG' || tag === 'H3' && e.target.attributes.value.value) {
+interface.addEventListener('click', (e) => {
+    if (e.target.nodeName === 'IMG') {
         content_path += `\\${e.target.attributes.value.value}`
-        retrieveFolderData(content_path)
+        getData(content_path);
     }
 });
 
-if (state) {
-    retrieveFolderData();
-    state = false
+backward.addEventListener('click', () => {
+    backward.removeAttribute('disabled', '');
+    let structure = content_path.split('\\'), result, res;
+    structure.pop();
+    if (structure.length === 1) {
+        backward.classList.add('disabled')
+        return;
+    };
+    backward.classList.remove('disabled')
+    for (let i = 0; i < structure.length; i++) {
+        result += `\\${structure[i]}`;
+    }
+    res = result.split('undefined\\')[1];
+    content_path = res;
+    getData(content_path)
+});
+
+boton.addEventListener('click', () => {
+    window.folder.Close();
+})
+
+function getData(content = '') {
+    console.log(content);
+    window.folder.getData(content, retrieveFolderData);
 }
+
+((content = '') => {
+    window.folder.getData(content, retrieveFolderData);
+})()

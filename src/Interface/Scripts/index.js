@@ -203,14 +203,17 @@ function UpdateConfig() {
 };
 
 async function getDataSettingsFile() {
-    await window.main.GetPathSettings_Data((e, data) => {
+    await window.main.GetPathSettings_Data((data) => {
+        console.log(data);
         if (data === 'Not Asigned') {
             stateRoute = false;
-            return inputRoute.removeAttribute('disabled')
+            inputRoute.removeAttribute('disabled');
+            return;
         }
         stateRoute = true;
-        inputFiles.setAttribute('value', data)
-        return inputRoute.setAttribute('disabled', '')
+        inputRoute.setAttribute('value', data);
+        inputRoute.setAttribute('disabled', '');
+        return;
     });
 }
 

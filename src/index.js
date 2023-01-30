@@ -1,5 +1,5 @@
 // Node Modules
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const { info, transports } = require('electron-log');
 const { homedir } = require('os');
@@ -71,7 +71,7 @@ const createWindow = () => {
     maxHeight: 820,
     maximizable: false,
     center: true,
-    resizable: true,
+    resizable: false,
     closable: true,
     webPreferences: {
       devTools: true,
@@ -123,7 +123,7 @@ const createWindow = () => {
   // Configs
   mainWindow.setTitle('NetLogistiK - MoveFiles')
   mainWindow.setMaxListeners(20);
-  //mainWindow.setMenu(null);
+  mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/main.html'));
 };
@@ -136,6 +136,7 @@ app.on('ready', () => {
   registerShortcuts('CommandOrControl+R');
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
+  info(BrowserWindow.getAllWindows().length);
 });
 // When the app is Quit throw message
 app.on('quit', () => {
@@ -150,6 +151,9 @@ app.on('browser-window-focus', (event, window) => {
     unregisterShortcuts();
   });
 });
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+})
 // Listen Events From Client Side
 ipcMain.on('viewLocalFiles', () => ViewLocals());
 // -------------------------------------------------- // -------------------------------------------------- //
@@ -273,7 +277,7 @@ ipcMain.on('searchWindow', () => {
     icon: join(__dirname, "Resources/MoveFiles_Icon.ico"),
     parent: mainWindow,
     width: 570,
-    height: 550,
+    height: 530,
     resizable: false,
     webPreferences: {
       devTools: true,
@@ -281,21 +285,44 @@ ipcMain.on('searchWindow', () => {
       preload: join(__dirname, 'Preloads/preloadRoute.js'),
     }
   })
+  folderWindow.setMenu(null);
   folderWindow.loadFile(join(__dirname, '/Interface/Views/folders.html'));
 })
 // -------------------------------------------------- // -------------------------------------------------- //
+ipcMain.on('CloseFolder', () => {
+  folderWindow.close();
+})
+// -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('getPathSystemData', (e, path) => {
-  let res_path = '', res_data = '', path_exits = '';
-  if (path === '') {
-    res_path = homedir();
-    res_data = readdirSync(homedir());
-    console.log(res_data, res_path, path_exits);
-    e.reply('returnDataFolders', { path: res_path || '', data: res_data });
+  try {
+    let res_path = '', res_data = '', path_exits = '';
+    if (path === '') {
+      res_path = homedir();
+      res_data = readdirSync(homedir(), { encoding: 'utf-8', withFileTypes: false });
+      e.reply('returnDataFolders', { path: res_path || '', data: res_data });
+      return;
+    }
+    path_exits = path;
+    res_data = readdirSync(path_exits, { encoding: 'utf-8', withFileTypes: false });
+    if (res_data.length === 0) {
+      UserSettingsFileGenerator({
+        status: true,
+        XMLConfig: true,
+        directoryPackage: path_exits,
+        directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Router.xml'),
+        directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
+      })
+      restartApplication();
+    }
+    e.reply('returnDataFolders', { path: path_exits || '', data: res_data });
     return;
+  } catch (err) {
+    console.log(err);
+    dialog.showMessageBoxSync(folderWindow, {
+      title: 'Acceso de Carpetas',
+      closable: true,
+      message: 'Esta carpeta no permite su acceso',
+      icon: join(__dirname, "Resources/MoveFiles_Icon.ico")
+    })
   }
-  path_exits = path;
-  res_data = readdirSync(path_exits);
-  console.log(res_data, res_path, path_exits);
-  e.reply('returnDataFolders', { path: path_exits || '', data: res_data });
-  return;
 })

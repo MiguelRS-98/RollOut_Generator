@@ -103,7 +103,8 @@ header,
 }
 
 #buttons-operations {
-    width: 60%;
+    margin: 0 15px;
+    width: auto;
 }
 
 #cancel,
@@ -173,4 +174,26 @@ header,
 
 .folders:hover {
     background-color: var(--files-area_event);
+}
+
+.original-button {
+    width: 20%;
+    display: grid;
+    width: 35px;
+    height: 35px;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+}
+
+.original-button:hover {
+    background-color: var(--files-area_event);
+}
+
+.disabled {
+    background: var(--app-grey-t);
 }

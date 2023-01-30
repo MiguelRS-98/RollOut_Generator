@@ -13,8 +13,11 @@
     <img src="./Resource/PKG-Final.png" alt="background-image" id="background-image">
     <header>
         <div id="header-path">
+            <button id="backward" class="original-button">
+                <img src="./Resource/Arrow-image.png" alt="Backward" width="40px" height="40px">
+            </button>
             <h2 id="path-text">Ruta Actual:&nbsp;</h2>
-            <input type="text" name="path" id="current-path" value="hola" disabled>
+            <input type="text" name="path" id="current-path" value="" disabled>
         </div>
     </header>
     <main id="ui">
@@ -22,11 +25,8 @@
     </main>
     <footer>
         <div id="buttons-operations">
-            <button id="cancel" class="ordinary-button">
+            <button id="confirm-exit" class="unique-button">
                 <h2>Cancelar</h2>
-            </button>
-            <button id="confirm" class="unique-button">
-                <h2>Seleccionar</h2>
             </button>
         </div>
     </footer>

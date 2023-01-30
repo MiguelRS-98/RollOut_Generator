@@ -47,7 +47,7 @@ function UpdateRouteSystem(inputRouteData) {
 function GetPathSettings_Data(params) {
     ipcRenderer.send('getData-PathRollOut')
     ipcRenderer.on('sendData-PathRollOut', (e, data) => {
-        params(e, data)
+        params(data)
     })
 }
 

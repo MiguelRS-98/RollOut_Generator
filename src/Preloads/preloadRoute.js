@@ -8,10 +8,17 @@ function getData(path, callback) {
         callback(data.data, data.path)
     })
 }
-
+function UpdateRoute(route) {
+    ipcRenderer.send('UpdateRouteSystem', route);
+}
+function Close() {
+    ipcRenderer.send('CloseFolder');
+}
 contextBridge.exposeInMainWorld(
     "folder",
     {
-        getData
+        getData,
+        UpdateRoute,
+        Close
     }
 )
