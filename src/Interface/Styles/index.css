@@ -13,7 +13,6 @@
 /* ------------------- Webkit ------------------- */
 
 ::-webkit-scrollbar-thumb {
-    border-radius: 20px;
     background-color: var(--net-blue);
 }
 
@@ -335,6 +334,7 @@ footer {
     overflow-y: auto;
 }
 #files-viewer {
+    overflow: hidden;
     width: 90%;
     height: 360px;
     border-radius: 20px;

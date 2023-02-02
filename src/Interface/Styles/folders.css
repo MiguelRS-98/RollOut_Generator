@@ -10,6 +10,16 @@
     --files-area_event: #00d9ff90;
 }
 
+/* ------------------- Webkit ------------------- */
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--net-blue);
+}
+
+::-webkit-scrollbar {
+    border-left: solid 2px var(--text-black);
+}
+
 /* ------------------- Definitions ------------------- */
 
 * {
@@ -55,6 +65,7 @@ header,
 }
 
 #current-path {
+    color: var(--text-black);
     width: 50%;
     height: 20px;
     border-radius: 20px;
@@ -104,7 +115,8 @@ header,
 
 #buttons-operations {
     margin: 0 15px;
-    width: auto;
+    width: 50%;
+    justify-content: space-around;
 }
 
 #cancel,
@@ -196,4 +208,11 @@ header,
 
 .disabled {
     background: var(--app-grey-t);
+}
+
+#disk-select {
+    width: 80px;
+    display: grid;
+    justify-items: center;
+    text-align: center;
 }

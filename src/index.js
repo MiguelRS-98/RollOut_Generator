@@ -118,12 +118,12 @@ const createWindow = () => {
     info('Tienes La Ultima Version Disponible ✅')
   }); // -----------------------------------------
   autoUpdater.on('error', () => {
-    info('rror En Actualizar La App ✅')
+    info('Error En Actualizar La App ✅')
   }) // -----------------------------------------
   // Configs
   mainWindow.setTitle('NetLogistiK - MoveFiles')
   mainWindow.setMaxListeners(20);
-  // mainWindow.setMenu(null);
+  mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/main.html'));
 };
@@ -280,17 +280,17 @@ ipcMain.on('searchWindow', () => {
     height: 530,
     resizable: false,
     webPreferences: {
-      devTools: true,
       nodeIntegration: true,
       preload: join(__dirname, 'Preloads/preloadRoute.js'),
     }
   })
-  // folderWindow.setMenu(null);
+  folderWindow.setMenu(null);
   folderWindow.loadFile(join(__dirname, '/Interface/Views/folders.html'));
 })
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('CloseFolder', () => {
   folderWindow.close();
+  mainWindow.focus()
 })
 // -------------------------------------------------- // -------------------------------------------------- //
 ipcMain.on('getPathSystemData', (e, path) => {
@@ -321,8 +321,11 @@ ipcMain.on('getPathSystemData', (e, path) => {
     dialog.showMessageBoxSync(folderWindow, {
       title: 'Acceso de Carpetas',
       closable: true,
-      message: 'Esta carpeta no permite su acceso',
+      message: 'Esta carpeta no existe o permite su acceso',
       icon: join(__dirname, "Resources/MoveFiles_Icon.ico")
     })
+    res_path = homedir();
+    res_data = readdirSync(homedir(), { encoding: 'utf-8', withFileTypes: false });
+    e.reply('returnDataFolders', { path: res_path || '', data: res_data });
   }
 })
