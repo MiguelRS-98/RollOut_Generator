@@ -6,19 +6,13 @@ const { homedir } = require('node:os');
 const { join } = require('node:path');
 
 class EventsProcess {
-    constructor(ipcNameParam) {
-        this.ipcMain_Name = ipcNameParam
-    }
     ViewLocals() {
-        try {
-            exec(`explorer.exe ${join(homedir(), 'AppData/Roaming/.UserSettings')}`)(err => {
-                if (err) {
-                    console.log(err);
-                }
-            })
-        } catch (err) {
-            console.log(err);
-        }
+        const ActualSettings = require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json'))
+        exec(`explorer.exe ${ActualSettings.directoryPackage}`, (err => {
+            if (err) {
+                console.log(err);
+            }
+        }));
     };
     LoadXMLSettings(XMLPathFile, typeFile) {
         const ActualSettings = require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json'))
@@ -29,6 +23,14 @@ class EventsProcess {
                     err ? console.log(err) : console.log('Load File Succesfull');
                 }
             );
+            writeFileSync(
+                join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json'),
+                JSON.stringify({
+                    ...ActualSettings,
+                    directoryRoutes: `${homedir()}\\AppData\\Roaming\\.UserSettings\\ConfigRouter\\CUSTOM\\Router.xml`
+                }),
+                { encoding: 'utf-8' }
+            );
         }
         if (typeFile === 'Policies') {
             copyFile(
@@ -37,16 +39,15 @@ class EventsProcess {
                     err ? console.log(err) : console.log('Load File Succesfull');
                 }
             );
+            writeFileSync(
+                join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json'),
+                JSON.stringify({
+                    ...ActualSettings,
+                    directoryPolicies: `${homedir()}\\AppData\\Roaming\\.UserSettings\\ConfigRouter\\CUSTOM\\Policies.xml`
+                }),
+                { encoding: 'utf-8' }
+            );
         };
-        writeFileSync(
-            join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json'),
-            JSON.stringify({
-                ...ActualSettings,
-                directoryRoutes: `${homedir()}\\AppData\\Roaming\\.UserSettings\\ConfigRouter\\CUSTOM\\Router.xml`,
-                directoryPolicies: `${homedir()}\\AppData\\Roaming\\.UserSettings\\ConfigRouter\\CUSTOM\\Policies.xml`
-            }),
-            { encoding: 'utf-8' }
-        );
         return;
     };
     addPKGFileContent(RollOutPath, Data) {
@@ -107,15 +108,16 @@ class EventsProcess {
                 })
             },
             COMPLETE: () => {
-                new Notification({
-                    title: 'RollOut Generado',
-                    body: 'El RollOut se genero exitosamente',
-                    icon: `${join(__dirname, '../../Resources/MoveFiles_Icon.png')}`,
-                }).show()
                 appendFileSync(
                     ReturnStringDataRouter,
                     `\n\n# Rebuilding C makefiles if necessary\n\n# Perform any environment rebuilds if necessary.\nMBUILD\n\n# End of the Script `
-                )
+                );
+                new Notification({
+                    title: 'Generacion de RollOut',
+                    body: 'El RollOut se genero exitosamente',
+                    closeButtonText: 'Entendido',
+                    icon: `${join(__dirname, "../../Resources/MoveFiles_Icon.ico")}`
+                }).show();
             }
         };
         Functions.REPLACE(Data);

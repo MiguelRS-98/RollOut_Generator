@@ -1,7 +1,7 @@
 {
   "name": "rollout_generator",
   "productName": "RollOut Generator",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "Generador de carpetas y archivos para RollOuts",
   "main": "src/index.js",
   "type": "commonjs",

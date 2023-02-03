@@ -2,23 +2,19 @@
 const loading_card = document.getElementById('loading-card-xml');
 const loading_card_h1 = document.getElementById('loading-card-h1-xml');
 const mtf_switch = document.getElementById('cancel-settings');
+const charge_settings = document.getElementById('charge-settings');
 
 let state = 0, Router, Policies;
 
 //Events
 function xml_submit_files_config() {
-    console.log('Verification XML Files');
-    if (state === 2) {
-        loading_card.classList.add('show');
-        loading_card.classList.remove('unshow');
-        setTimeout(() => {
-            loading_card.classList.add('unshow');
-            loading_card.classList.remove('show');
-            window.main.loadXML(Router, 'Router');
-            window.main.loadXML(Policies, 'Policies');
-            window.main.Restart();
-        }, 3000);
-    }
+    loading_card.classList.add('show');
+    loading_card.classList.remove('unshow');
+    setTimeout(() => {
+        loading_card.classList.add('unshow');
+        loading_card.classList.remove('show');
+        window.main.Restart();
+    }, 3000);
 };
 
 mtf_switch.addEventListener('click', () => {
@@ -59,7 +55,7 @@ filesAreaXML.addEventListener('drop', e => {
     if (fileXML[0].name.includes('.xml')) {
         filesAreaXML.classList.add('checkpass');
         Router = fileXML[0].path;
-        state++
+        window.main.loadXML(Router, 'Router');
         filesAreaTextXML.textContent = `Archivo ${fileXML[0].name} Cargado`;
     } else {
         filesAreaXML.classList.add('checkwrong');
@@ -97,27 +93,24 @@ filesAreaPolicies.addEventListener('drop', e => {
     e.preventDefault();
     filePolicies = e.dataTransfer.files;
     filesAreaPolicies.classList.remove('active');
-    if (filePolicies[0].name.includes('.xml') && state === 1) {
+    if (filePolicies[0].name.includes('.xml')) {
         filesAreaPolicies.classList.add('checkpass');
         Policies = filePolicies[0].path;
-        state++
-        UploadXMLFiles();
+        window.main.loadXML(Policies, 'Policies');
         filesAreaTextPolicies.textContent = `Archivo ${filePolicies[0].name} Cargado`;
     } else {
         filesAreaPolicies.classList.add('checkwrong')
         filesAreaTextPolicies.textContent = `Archivo ${filePolicies[0].name} Sin Subir`
     }
+});
+
+charge_settings.addEventListener('click', () => {
+    xml_submit_files_config();
 })
 
 inputFilesPolicies.addEventListener('change', e => {
     filePolicies = this.files;
 })
-
-function UploadXMLFiles() {
-    if (state === 2) {
-        xml_submit_files_config();
-    }
-}
 
 const cancelButton = document.getElementById('filesSettingsButton5');
 

@@ -79,51 +79,10 @@ const createWindow = () => {
       preload: join(__dirname, 'Preloads/preload.js'),
     }
   });
-  // Set UserTask List
-  mainWindow.setThumbarButtons([
-    {
-      icon: join(__dirname, 'Resources/Restart.png'),
-      click: () => {
-        UserSettingsFileDelete();
-        restartApplication();
-      }
-    }, {
-      icon: join(__dirname, 'Resources/Settings.png'),
-      click: () => {
-        UserSettingsFileGenerator({
-          status: true,
-          XMLConfig: false,
-          directoryPackage: require(join(homedir(), 'AppData\\Roaming\\.UserSettings\\settings.json')).directoryPackage,
-          directoryRoutes: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Router.xml'),
-          directoryPolicies: join(homedir(), 'AppData\\Roaming\\.UserSettings\\ConfigRouter\\DEFAULT\\Policies.xml')
-        })
-        restartApplication();
-      }
-    }
-  ])
-  // Updates Events
-  autoUpdater.on('update-available', () => {
-    info('Actualizacion Disponible')
-  }); // -----------------------------------------
-  autoUpdater.on('checking-for-update', () => {
-    info('Buscando Actualizaciones...')
-  }); // -----------------------------------------
-  autoUpdater.on('update-downloaded', () => {
-    info('Actualizacion Descargada')
-  }); // -----------------------------------------
-  autoUpdater.on('download-progress', (progress) => {
-    info(`[ Descargando... ${Math.trunc(progress.percent)}% ]`)
-  }); // -----------------------------------------
-  autoUpdater.on('update-not-available', () => {
-    info('Tienes La Ultima Version Disponible ✅')
-  }); // -----------------------------------------
-  autoUpdater.on('error', () => {
-    info('Error En Actualizar La App ✅')
-  }) // -----------------------------------------
   // Configs
   mainWindow.setTitle('NetLogistiK - MoveFiles')
   mainWindow.setMaxListeners(20);
-  mainWindow.setMenu(null);
+  // mainWindow.setMenu(null);
   // and load the index.html of the app.
   mainWindow.loadFile(join(__dirname, '/Interface/Views/main.html'));
 };
@@ -132,11 +91,36 @@ app.setAppLogsPath(join(homedir(), 'AppData\\Roaming\\.UserSettings\\AppLogs'));
 // Disable Hardware Accelaration
 app.disableHardwareAcceleration();
 // When de app is ready, execute the the window
+// Function Updates 
+function checkUpdates() {
+  autoUpdater.checkForUpdatesAndNotify();
+  setInterval(() => {
+    autoUpdater.checkForUpdatesAndNotify();
+  }, 30000);
+}
+// Updates Events
+autoUpdater.on('update-available', () => {
+  info('Actualizacion Disponible')
+}); // -----------------------------------------
+autoUpdater.on('checking-for-update', () => {
+  info('Buscando Actualizaciones...')
+}); // -----------------------------------------
+autoUpdater.on('update-downloaded', () => {
+  info('Actualizacion Descargada')
+}); // -----------------------------------------
+autoUpdater.on('download-progress', (progress) => {
+  info(`[ Descargando... ${Math.trunc(progress.percent)}% ]`)
+}); // -----------------------------------------
+autoUpdater.on('update-not-available', () => {
+  info('Tienes La Ultima Version Disponible ✅')
+}); // -----------------------------------------
+autoUpdater.on('error', () => {
+  info('Error En Actualizar La App ✅')
+}) // -----------------------------------------
 app.on('ready', () => {
   registerShortcuts('CommandOrControl+R');
   createWindow();
-  autoUpdater.checkForUpdatesAndNotify();
-  info(BrowserWindow.getAllWindows().length);
+  checkUpdates()
 });
 // When the app is Quit throw message
 app.on('quit', () => {
@@ -279,6 +263,7 @@ ipcMain.on('searchWindow', () => {
     width: 570,
     height: 530,
     resizable: false,
+    modal: true,
     webPreferences: {
       nodeIntegration: true,
       preload: join(__dirname, 'Preloads/preloadRoute.js'),

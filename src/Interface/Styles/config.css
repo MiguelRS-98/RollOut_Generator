@@ -41,15 +41,25 @@
     background-color: var(--app-grey);
 }
 
+#drop-files-button-cancel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
 #drop-files-csv-content,
 #drop-files-routes-content {
     width: 80%;
 }
 
+#charge-settings,
 #cancel-settings {
+    width: 100px;
     height: 80px;
 }
 
+#charge-settings>h3,
 #cancel-settings>h3 {
     margin: 0;
 }

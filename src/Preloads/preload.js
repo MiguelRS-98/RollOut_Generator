@@ -26,7 +26,7 @@ function deleteDirectories() {
     ipcRenderer.send('DeleteDirectories');
 }
 function RollOutCreation() {
-    ipcRenderer.send('UploadDataToPKGFile')
+    ipcRenderer.send('UploadDataToPKGFile');
 }
 function loadXML(XMLFilePath, Identify) {
     let Data = {

@@ -160,7 +160,7 @@ function deleteFilesPrepared(value) {
     renderFiles(filesDataArray);
 }
 
-function renderFiles(files) {
+function renderFiles() {
     if (filesDataArray.length === 0) {
         filesViewerState('on');
         return;
@@ -184,6 +184,10 @@ function renderFiles(files) {
         `;
     }
 }
+
+self.addEventListener('notificationclick', e => {
+    console.log(e);
+})
 
 function retrieveFiles(files) {
     for (let file of files) {
